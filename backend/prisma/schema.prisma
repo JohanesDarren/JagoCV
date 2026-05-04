@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String      @id @default(uuid())
+  email           String      @unique
+  password        String
+  name            String
+  role            String?     @default("User")
+  profileImageUrl String?
+  portfolioViews  Int         @default(0)
+  documents       Document[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+model Document {
+  id        String   @id @default(uuid())
+  title     String
+  type      String   // "ATS CV", "Visual Resume", "Web Portfolio"
+  status    String   // "Selesai", "Diterbitkan", "Draf"
+  content   Json?    // Detailed data for the CV/Portfolio
+  date      String   // Formatted date string or use createdAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

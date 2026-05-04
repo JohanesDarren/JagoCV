@@ -45,11 +45,9 @@ export default function App() {
       {/* Top Navigation */}
     <nav className="w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-[#070B19]/80 backdrop-blur-md sticky top-0 z-50 animate-[slideDown_0.3s_ease_forwards]">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-cyan-400 flex items-center justify-center text-white font-bold shadow-[0_0_15px_rgba(37,99,235,0.4)]">
-            J
-          </div>
-          <span className="font-semibold text-slate-900 dark:text-slate-100 tracking-wide text-xl">jago<span className="text-blue-400">CV</span></span>
+        <div className="flex items-center">
+          <img src="/JagoCV.png" alt="jagoCV Logo" className="h-8 w-auto block dark:hidden" />
+          <img src="/JagoCV%20BW.png" alt="jagoCV Logo" className="h-8 w-auto hidden dark:block" />
         </div>
         <div className="flex items-center gap-4">
           <button id="theme-toggle-app" className="p-2 rounded-full text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">

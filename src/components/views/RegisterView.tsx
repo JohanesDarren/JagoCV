@@ -14,11 +14,9 @@ export default function RegisterView() {
 
           {/* Logo & Back Button */}
           <div className="relative z-10 flex items-center justify-between w-full">
-            <div className="flex items-center gap-3 cursor-pointer group w-fit" onClick={() => { (window as any).document.getElementById('view-register').classList.remove('flex'); document.getElementById('view-register').classList.add('hidden'); document.getElementById('view-landing').classList.remove('hidden'); document.getElementById('view-landing').classList.add('flex', 'flex-col'); }}>
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold shadow-[0_0_20px_rgba(59,130,246,0.5)] text-2xl group-hover:scale-105 transition-transform">
-                J
-              </div>
-              <span className="text-2xl font-bold text-white tracking-wide">jagoCV</span>
+            <div className="flex items-center cursor-pointer group w-fit" onClick={() => { (window as any).document.getElementById('view-register').classList.remove('flex'); document.getElementById('view-register').classList.add('hidden'); document.getElementById('view-landing').classList.remove('hidden'); document.getElementById('view-landing').classList.add('flex', 'flex-col'); }}>
+              <img src="/JagoCV.png" alt="jagoCV Logo" className="h-12 w-auto block dark:hidden group-hover:scale-105 transition-transform" />
+              <img src="/JagoCV%20BW.png" alt="jagoCV Logo" className="h-12 w-auto hidden dark:block group-hover:scale-105 transition-transform" />
             </div>
             <button onClick={() => { (window as any).document.getElementById('view-register').classList.remove('flex'); document.getElementById('view-register').classList.add('hidden'); document.getElementById('view-landing').classList.remove('hidden'); document.getElementById('view-landing').classList.add('flex', 'flex-col'); }} className="hidden sm:flex items-center gap-2 text-white/80 hover:text-white transition-all hover:bg-white/10 px-4 py-2 rounded-xl backdrop-blur-md border border-white/5 hover:border-white/20 text-sm font-semibold">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>

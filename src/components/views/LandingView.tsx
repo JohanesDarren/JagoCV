@@ -12,11 +12,9 @@ export default function LandingView() {
       {/* Top Navigation (Landing) */}
       <nav className="w-full fixed top-0 z-50 bg-slate-50/80 dark:bg-[#070B19]/80 backdrop-blur-md border-b border-black/5 dark:border-white/5 transition-all">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-400 flex items-center justify-center text-white font-bold shadow-[0_0_20px_rgba(37,99,235,0.4)] text-xl">
-              J
-            </div>
-            <span className="font-bold text-slate-900 dark:text-slate-100 tracking-wide text-2xl">jago<span className="text-blue-400">CV</span></span>
+          <div className="flex items-center">
+            <img src="/JagoCV.png" alt="jagoCV Logo" className="h-10 w-auto block dark:hidden" />
+            <img src="/JagoCV%20BW.png" alt="jagoCV Logo" className="h-10 w-auto hidden dark:block" />
           </div>
           <div className="flex items-center gap-6">
             <a href="#features" className="hidden md:block text-slate-700 dark:text-slate-300 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-white/5 dark:hover:text-white font-medium transition-colors">Fitur</a>
@@ -801,9 +799,9 @@ export default function LandingView() {
       {/* Footer */}
       <footer className="relative z-10 w-full border-t border-slate-200/80 dark:border-slate-800/80 bg-slate-50 dark:bg-[#040711] py-12 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded bg-gradient-to-br from-blue-600 to-cyan-400 flex items-center justify-center text-white font-bold text-xs">J</div>
-            <span className="font-bold text-slate-500 dark:text-slate-400 tracking-wide text-sm">jagoCV</span>
+           <div className="flex items-center">
+            <img src="/JagoCV.png" alt="jagoCV Logo" className="h-6 w-auto block dark:hidden" />
+            <img src="/JagoCV%20BW.png" alt="jagoCV Logo" className="h-6 w-auto hidden dark:block" />
           </div>
           <div className="flex gap-6 text-sm text-slate-500 font-medium">
              <a href="#" className="hover:text-slate-300 transition-colors">Kebijakan Privasi</a>
