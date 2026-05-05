@@ -27,7 +27,7 @@ export default function ProfileView() {
               <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-end -mt-16 mb-6 gap-4">
                 <div className="relative group">
                   <div className="p-1.5 bg-white dark:bg-[#0B1221] rounded-full inline-block">
-                    <img id="profile-page-img" src={undefined} alt="Profile" className="w-28 h-28 rounded-full border-4 border-slate-100 dark:border-slate-800 object-cover shadow-lg bg-slate-200 dark:bg-slate-700" />
+                    <img id="profile-page-img" src="" alt="" className="w-28 h-28 rounded-full border-4 border-slate-100 dark:border-slate-800 object-cover shadow-lg bg-slate-200 dark:bg-slate-700" />
                   </div>
                   <button className="absolute bottom-3 right-3 p-2 bg-blue-600 text-white rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-blue-500">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>

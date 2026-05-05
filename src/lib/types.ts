@@ -7,6 +7,10 @@ export interface RecentDocument {
   type: DocType;
   status: DocStatus;
   date: string;
+  // Preferensi desain per dokumen — bukan data global
+  templateId?: string;  // Layout yang dipilih user saat membuat dokumen
+  fontFamily?: string;  // Font yang dipilih user
+  themeColor?: string;  // Warna tema yang dipilih user
 }
 
 export interface UserDashboardData {

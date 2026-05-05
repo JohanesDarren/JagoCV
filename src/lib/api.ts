@@ -21,10 +21,31 @@ export const api = {
   login: (credentials: any) => api.request('/auth/login', { method: 'POST', body: JSON.stringify(credentials) }),
   register: (user: any) => api.request('/auth/register', { method: 'POST', body: JSON.stringify(user) }),
 
-  // Documents
+  // Documents — Per User (tidak global)
   getDocuments: () => api.request('/documents'),
-  saveDocument: (doc: any) => api.request('/documents', { method: 'POST', body: JSON.stringify(doc) }),
+  
+  saveDocument: (doc: {
+    title: string;
+    type: string;
+    content?: any;
+    status?: string;
+    templateId?: string;   // Pilihan template user
+    fontFamily?: string;   // Pilihan font user
+    themeColor?: string;   // Pilihan warna tema user
+  }) => api.request('/documents', { method: 'POST', body: JSON.stringify(doc) }),
+
+  updateDocument: (id: string, data: {
+    title?: string;
+    status?: string;
+    templateId?: string;
+    fontFamily?: string;
+    themeColor?: string;
+    content?: any;
+  }) => api.request(`/documents/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
+
+  deleteDocument: (id: string) => api.request(`/documents/${id}`, { method: 'DELETE' }),
 
   // Chat
   saveChatMessage: (msg: any) => api.request('/chat', { method: 'POST', body: JSON.stringify(msg) }),
+  getChatHistory: () => api.request('/chat'),
 };

@@ -1,4 +1,5 @@
 import { api } from '../lib/api';
+import { populateProfilePage } from './dashboard';
 
 export function initRouter() {
   const viewLanding = document.getElementById("view-landing");
@@ -232,6 +233,8 @@ export function initRouter() {
      btnNavProfile.addEventListener("click", () => {
         hideAllViews();
         showView(viewProfile);
+        // Selalu refresh data profil setiap kali halaman profil dibuka
+        populateProfilePage();
      });
   }
   
@@ -345,6 +348,10 @@ export function initRouter() {
       const fullName = (document.getElementById('cv-full-name') as HTMLInputElement)?.value || "CV Baru";
       const targetRole = (document.getElementById('cv-target-role') as HTMLInputElement)?.value || "";
       
+      // Ambil pilihan template yang dipilih user (dari radio button)
+      const selectedTemplate = (document.querySelector('#view-create-cv input[name="layout"]:checked') as HTMLInputElement)?.value || 'standard';
+      const selectedFont = (document.querySelector('#view-create-cv input[name="font"]:checked') as HTMLInputElement)?.value || 'Inter';
+      
       try {
         await api.saveDocument({
           title: `CV - ${fullName}`,
@@ -354,9 +361,15 @@ export function initRouter() {
             targetRole,
             email: (document.getElementById('cv-email') as HTMLInputElement)?.value,
             phone: (document.getElementById('cv-phone') as HTMLInputElement)?.value,
+            location: (document.getElementById('cv-location') as HTMLInputElement)?.value,
+            linkedin: (document.getElementById('cv-linkedin') as HTMLInputElement)?.value,
+            portfolio: (document.getElementById('cv-portfolio') as HTMLInputElement)?.value,
             summary: (document.getElementById('cv-summary') as HTMLTextAreaElement)?.value
           },
-          status: 'Selesai'
+          status: 'Selesai',
+          templateId: selectedTemplate,
+          fontFamily: selectedFont,
+          themeColor: 'blue'
         });
 
         // Trigger dashboard refresh

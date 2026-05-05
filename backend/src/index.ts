@@ -90,7 +90,7 @@ app.get('/api/documents', authenticateToken, async (req: any, res: Response) => 
 
 // 4. Simpan Dokumen Baru (CV/Portfolio)
 app.post('/api/documents', authenticateToken, async (req: any, res: Response) => {
-  const { title, type, content, status } = req.body;
+  const { title, type, content, status, templateId, fontFamily, themeColor } = req.body;
   try {
     const newDoc = await prisma.document.create({
       data: {
@@ -99,6 +99,9 @@ app.post('/api/documents', authenticateToken, async (req: any, res: Response) =>
         content,
         status: status || 'Draf',
         date: new Date().toLocaleDateString('id-ID'),
+        templateId: templateId || 'standard',
+        fontFamily: fontFamily || 'Inter',
+        themeColor: themeColor || 'blue',
         userId: req.user.id
       }
     });
@@ -107,6 +110,46 @@ app.post('/api/documents', authenticateToken, async (req: any, res: Response) =>
     res.status(400).json({ error: 'Gagal menyimpan dokumen' });
   }
 });
+
+// 4b. Update Dokumen (ubah template/font/status)
+app.patch('/api/documents/:id', authenticateToken, async (req: any, res: Response) => {
+  const { id } = req.params;
+  const { title, status, templateId, fontFamily, themeColor, content } = req.body;
+  try {
+    // Pastikan dokumen milik user yang sedang login
+    const doc = await prisma.document.findFirst({ where: { id, userId: req.user.id } });
+    if (!doc) return res.status(404).json({ error: 'Dokumen tidak ditemukan' });
+
+    const updated = await prisma.document.update({
+      where: { id },
+      data: {
+        ...(title && { title }),
+        ...(status && { status }),
+        ...(templateId && { templateId }),
+        ...(fontFamily && { fontFamily }),
+        ...(themeColor && { themeColor }),
+        ...(content && { content }),
+      }
+    });
+    res.json(updated);
+  } catch (error) {
+    res.status(400).json({ error: 'Gagal memperbarui dokumen' });
+  }
+});
+
+// 4c. Hapus Dokumen
+app.delete('/api/documents/:id', authenticateToken, async (req: any, res: Response) => {
+  const { id } = req.params;
+  try {
+    const doc = await prisma.document.findFirst({ where: { id, userId: req.user.id } });
+    if (!doc) return res.status(404).json({ error: 'Dokumen tidak ditemukan' });
+    await prisma.document.delete({ where: { id } });
+    res.json({ message: 'Dokumen berhasil dihapus' });
+  } catch (error) {
+    res.status(400).json({ error: 'Gagal menghapus dokumen' });
+  }
+});
+
 
 // --- CHAT ROUTES ---
 

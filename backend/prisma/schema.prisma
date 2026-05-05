@@ -35,7 +35,12 @@ model Document {
   
   // Konten Utama (Menampung semua data wizard/form dalam format JSON)
   content   Json?    
-  
+
+  // Preferensi Desain — tersimpan per dokumen per user
+  templateId  String?  @default("standard")  // ID layout yang dipilih user
+  fontFamily  String?  @default("Inter")      // Font yang dipilih user
+  themeColor  String?  @default("blue")       // Warna tema yang dipilih user
+
   date      String   
   userId    String
   user      User     @relation(fields: [userId], references: [id])
