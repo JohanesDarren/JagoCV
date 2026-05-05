@@ -1,3 +1,5 @@
+import { api } from '../lib/api';
+
 export function initChat() {
   const globalChatWidgets = document.querySelectorAll('.js-global-chat');
   globalChatWidgets.forEach(widget => {
@@ -23,9 +25,10 @@ export function initChat() {
       msgDiv.appendChild(contentDiv);
       msgDiv.appendChild(avatarDiv);
       messagesContainer.appendChild(msgDiv);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
     };
 
-    const addAiResponse = () => {
+    const addAiResponse = async () => {
       const loadingDiv = document.createElement('div');
       loadingDiv.className = 'flex items-start gap-4 mt-4 animate-[fadeIn_0.3s_ease_forwards]';
       
@@ -43,9 +46,12 @@ export function initChat() {
          </div>
       `;
       messagesContainer.appendChild(loadingDiv);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-      setTimeout(() => {
+      setTimeout(async () => {
         loadingDiv.remove();
+        
+        const responseText = "Proses Selesai! Saya telah memperbarui seluruh dokumen untuk Anda berdasarkan instruksi tersebut.";
         
         const responseDiv = document.createElement('div');
         responseDiv.className = 'flex items-start gap-4 mt-4 animate-[fadeIn_0.3s_ease_forwards]';
@@ -55,19 +61,35 @@ export function initChat() {
            </div>
            <div class="${bubbleClass} border p-4 rounded-2xl rounded-tl-none text-sm text-emerald-400 font-semibold shadow-sm leading-relaxed max-w-2xl flex items-center gap-2">
              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-             Process Complete! I've updated the entire document for you.
+             ${responseText}
            </div>
         `;
         messagesContainer.appendChild(responseDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        // SIMPAN KE DATABASE (AI Message)
+        try {
+          await api.saveChatMessage({ content: responseText, role: 'assistant' });
+        } catch (err) {
+          console.error("Gagal menyimpan chat AI:", err);
+        }
       }, 1500);
     };
 
-    const handleSend = () => {
+    const handleSend = async () => {
       const text = input.value.trim();
       if (!text) return;
       
       addUserMessage(text);
       input.value = '';
+
+      // SIMPAN KE DATABASE (User Message)
+      try {
+        await api.saveChatMessage({ content: text, role: 'user' });
+      } catch (err) {
+        console.error("Gagal menyimpan chat user:", err);
+      }
+      
       addAiResponse();
     };
 
@@ -81,7 +103,9 @@ export function initChat() {
 
     quickActions.forEach(btn => {
       btn.addEventListener('click', () => {
-        addUserMessage(btn.textContent || '');
+        const text = btn.textContent || '';
+        addUserMessage(text);
+        api.saveChatMessage({ content: text, role: 'user' });
         addAiResponse();
       });
     });

@@ -1,3 +1,5 @@
+import { api } from '../lib/api';
+
 export function initRouter() {
   const viewLanding = document.getElementById("view-landing");
   const viewLogin = document.getElementById("view-login");
@@ -9,10 +11,10 @@ export function initRouter() {
   const btnNavRegister = document.getElementById("btn-nav-register");
   const btnLoginGoogle = document.getElementById("btn-login-google");
   const btnRegisterGoogle = document.getElementById("btn-register-google");
-  const btnRegisterSubmit = document.getElementById("btn-register-submit");
+  const btnRegisterSubmit = document.getElementById("btn-register-submit") as HTMLButtonElement;
   const linkToRegister = document.getElementById("link-to-register");
   const linkToLogin = document.getElementById("link-to-login");
-  const btnLoginSubmit = document.getElementById("btn-login-submit");
+  const btnLoginSubmit = document.getElementById("btn-login-submit") as HTMLButtonElement;
 
   const viewDashboard = document.getElementById("view-dashboard");
   const viewProfile = document.getElementById("view-profile");
@@ -155,7 +157,40 @@ export function initRouter() {
   if (btnNavRegister) btnNavRegister.addEventListener("click", launchRegisterApp);
   if (linkToRegister) linkToRegister.addEventListener("click", (e) => { e.preventDefault(); launchRegisterApp(); });
   if (linkToLogin) linkToLogin.addEventListener("click", (e) => { e.preventDefault(); launchLoginApp(); });
-  if (btnRegisterSubmit) btnRegisterSubmit.addEventListener("click", launchDashboardApp);
+  // Tangkap event SUBMIT dari form register (bukan click dari tombol)
+  const registerForm = document.querySelector('#view-register form') as HTMLFormElement;
+  if (registerForm) {
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const firstName = (document.getElementById('reg-first-name') as HTMLInputElement).value.trim();
+      const lastName = (document.getElementById('reg-last-name') as HTMLInputElement).value.trim();
+      const email = (document.getElementById('reg-email') as HTMLInputElement).value.trim();
+      const password = (document.getElementById('reg-password') as HTMLInputElement).value;
+
+      if (!email || !password || !firstName) {
+        alert('Harap isi Nama, Email, dan Password');
+        return;
+      }
+      if (password.length < 8) {
+        alert('Password minimal 8 karakter');
+        return;
+      }
+
+      const submitBtn = document.getElementById('btn-register-submit') as HTMLButtonElement;
+      try {
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Mendaftar...'; }
+        await api.register({ name: `${firstName} ${lastName}`.trim(), email, password });
+        alert('Registrasi berhasil! Silakan masuk dengan akun Anda.');
+        registerForm.reset();
+        launchLoginApp();
+      } catch (err: any) {
+        alert('Gagal mendaftar: ' + err.message);
+      } finally {
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Daftar Sekarang'; }
+      }
+    });
+  }
+
   if (btnNavLogin) btnNavLogin.addEventListener("click", launchLoginApp);
   
   const landingLoginBtns = document.querySelectorAll('.btn-landing-login');
@@ -164,7 +199,34 @@ export function initRouter() {
   if (btnLaunchApp) btnLaunchApp.addEventListener("click", launchLoginApp);
   if (btnCtaLaunch) btnCtaLaunch.addEventListener("click", launchLoginApp);
   if (btnLoginGoogle) btnLoginGoogle.addEventListener("click", launchDashboardApp);
-  if (btnLoginSubmit) btnLoginSubmit.addEventListener("click", launchDashboardApp);
+  // Tangkap event SUBMIT dari form login (bukan click dari tombol)
+  const loginForm = document.querySelector('#view-login form') as HTMLFormElement;
+  if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = (document.getElementById('login-email') as HTMLInputElement).value.trim();
+      const password = (document.getElementById('login-password') as HTMLInputElement).value;
+
+      if (!email || !password) {
+        alert('Harap isi Email dan Password');
+        return;
+      }
+
+      const submitBtn = document.getElementById('btn-login-submit') as HTMLButtonElement;
+      try {
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Masuk...'; }
+        const res = await api.login({ email, password });
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('user', JSON.stringify(res.user));
+        loginForm.reset();
+        launchDashboardApp();
+      } catch (err: any) {
+        alert('Login gagal: ' + err.message);
+      } finally {
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Masuk Sekarang'; }
+      }
+    });
+  }
   
   if (btnNavProfile) {
      btnNavProfile.addEventListener("click", () => {
@@ -234,6 +296,10 @@ export function initRouter() {
 
   if (btnLogout) {
      btnLogout.addEventListener("click", () => {
+        // HAPUS SESI
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        
         if (appWrapper) {
            appWrapper.classList.add("hidden");
            appWrapper.classList.remove("flex");
@@ -243,7 +309,10 @@ export function initRouter() {
            viewLanding.classList.remove("hidden", "flex");
         }
         hideAllViews();
-        showView(viewDashboard);
+        showView(viewDashboard); // Ini hanya untuk mereset state view internal
+        
+        alert("Anda telah keluar.");
+        location.reload(); // Refresh untuk memastikan state bersih
      });
   }
 
@@ -269,14 +338,39 @@ export function initRouter() {
   }
 
   if (btnGenerateCv) {
-    btnGenerateCv.addEventListener("click", () => {
+    btnGenerateCv.addEventListener("click", async () => {
       const originalText = btnGenerateCv.innerHTML;
-      btnGenerateCv.innerHTML = `<svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Membuat...`;
-      setTimeout(() => {
-        hideAllViews();
-        showView(viewCvResult);
+      btnGenerateCv.innerHTML = `<svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Menyimpan...`;
+      
+      const fullName = (document.getElementById('cv-full-name') as HTMLInputElement)?.value || "CV Baru";
+      const targetRole = (document.getElementById('cv-target-role') as HTMLInputElement)?.value || "";
+      
+      try {
+        await api.saveDocument({
+          title: `CV - ${fullName}`,
+          type: 'ATS CV',
+          content: { 
+            fullName, 
+            targetRole,
+            email: (document.getElementById('cv-email') as HTMLInputElement)?.value,
+            phone: (document.getElementById('cv-phone') as HTMLInputElement)?.value,
+            summary: (document.getElementById('cv-summary') as HTMLTextAreaElement)?.value
+          },
+          status: 'Selesai'
+        });
+
+        // Trigger dashboard refresh
+        document.dispatchEvent(new CustomEvent('auth-success'));
+
+        setTimeout(() => {
+          hideAllViews();
+          showView(viewCvResult);
+          btnGenerateCv.innerHTML = originalText;
+        }, 1000);
+      } catch (err: any) {
+        alert("Gagal menyimpan CV: " + err.message);
         btnGenerateCv.innerHTML = originalText;
-      }, 1000);
+      }
     });
   }
 
@@ -493,4 +587,16 @@ export function initRouter() {
     }
   });
 
+  // --- INITIAL SESSION CHECK ---
+  const token = localStorage.getItem('token');
+  if (token) {
+    launchDashboardApp();
+  } else {
+    // Default to Landing/Login if not authenticated
+    if (appWrapper) appWrapper.classList.add("hidden");
+    if (viewLanding) {
+       viewLanding.classList.remove("hidden");
+       viewLanding.classList.add("block", "flex-col");
+    }
+  }
 }

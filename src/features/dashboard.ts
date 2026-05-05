@@ -1,11 +1,52 @@
-import { mockDashboardData } from '../lib/mockData';
+import { api } from '../lib/api';
 import { UserDashboardData } from '../lib/types';
 
 export function initDashboard() {
-  populateDashboard(mockDashboardData);
+  const dashboardContainer = document.getElementById("view-dashboard");
+  if (!dashboardContainer) return;
+
+  async function refreshDashboardData() {
+    try {
+      const userRaw = localStorage.getItem('user');
+      if (!userRaw) return;
+      const user = JSON.parse(userRaw);
+
+      // Ambil dokumen asli dari PostgreSQL melalui Backend
+      const documents = await api.getDocuments();
+
+      const dashboardData: UserDashboardData = {
+        name: user.name,
+        role: user.role || 'Member JagoCV',
+        profileImageUrl: user.profileImageUrl || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+        portfolioViews: user.portfolioViews || 0,
+        recentDocs: documents.map((doc: any) => ({
+          id: doc.id,
+          title: doc.title,
+          type: doc.type,
+          status: doc.status,
+          date: doc.date
+        }))
+      };
+
+      populateDashboard(dashboardData);
+    } catch (err) {
+      console.error("Gagal memuat data dashboard:", err);
+    }
+  }
+
+  // Muat data saat login berhasil
+  document.addEventListener('auth-success', refreshDashboardData);
+  
+  // Cek jika sudah ada session
+  if (localStorage.getItem('token')) {
+    refreshDashboardData();
+  }
 }
 
 function populateDashboard(data: UserDashboardData) {
+  const userRaw = localStorage.getItem('user');
+  const user = userRaw ? JSON.parse(userRaw) : null;
+
   const elName = document.getElementById("nav-user-name");
   const elRole = document.getElementById("nav-user-role");
   const elImg = document.getElementById("nav-profile-img") as HTMLImageElement;
@@ -14,6 +55,12 @@ function populateDashboard(data: UserDashboardData) {
   const pfRole = document.getElementById("profile-page-role");
   const pfImg = document.getElementById("profile-page-img") as HTMLImageElement;
 
+  // Data Profil Tambahan
+  const pfEmail = document.getElementById("pf-email");
+  const pfSubs = document.getElementById("pf-subs-tier");
+  const pfCvCount = document.getElementById("pf-cv-count");
+  const pfPortfolioCount = document.getElementById("pf-portfolio-count");
+
   if (elName) elName.textContent = data.name;
   if (elRole) elRole.textContent = data.role;
   if (elImg) elImg.src = data.profileImageUrl;
@@ -21,6 +68,18 @@ function populateDashboard(data: UserDashboardData) {
   if (pfName) pfName.textContent = data.name;
   if (pfRole) pfRole.textContent = data.role;
   if (pfImg) pfImg.src = data.profileImageUrl;
+
+  // Isi data rill dari database
+  if (user) {
+    if (pfEmail) pfEmail.textContent = user.email;
+    if (pfSubs) pfSubs.textContent = user.subscriptionTier || "Biasa";
+  }
+
+  const cvs = data.recentDocs.filter(d => d.type === 'ATS CV' || d.type === 'Visual Resume');
+  const portfolios = data.recentDocs.filter(d => d.type === 'Web Portfolio');
+
+  if (pfCvCount) pfCvCount.textContent = cvs.length.toString();
+  if (pfPortfolioCount) pfPortfolioCount.textContent = portfolios.length.toString();
 
   const viewsEl = document.getElementById("lbl-portfolio-views");
   if (viewsEl) viewsEl.textContent = data.portfolioViews.toString();
@@ -31,7 +90,7 @@ function populateDashboard(data: UserDashboardData) {
   if (grid && listBody) {
     grid.innerHTML = `
       <!-- Create Blank Card -->
-      <div class="group relative bg-[#F8FAFC]/80 dark:bg-[#0a0f1c]/50 border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-blue-500 dark:hover:border-blue-500 rounded-2xl overflow-hidden aspect-[3/4] flex flex-col items-center justify-center cursor-pointer transition-all hover:bg-blue-50/50 dark:hover:bg-blue-900/10">
+      <div id="btn-create-blank" class="group relative bg-[#F8FAFC]/80 dark:bg-[#0a0f1c]/50 border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-blue-500 dark:hover:border-blue-500 rounded-2xl overflow-hidden aspect-[3/4] flex flex-col items-center justify-center cursor-pointer transition-all hover:bg-blue-50/50 dark:hover:bg-blue-900/10">
         <div class="w-12 h-12 rounded-full bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-blue-600 dark:text-blue-400 mb-3 group-hover:scale-110 transition-transform">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
         </div>
