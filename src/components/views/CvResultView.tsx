@@ -1,15 +1,15 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export default function CvResultView() {
   return (
-    <>
-      <div id="view-cv-result" className="hidden animate-[fadeIn_0.5s_ease_forwards]">
-        
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-          <button id="btn-back-to-edit-cv" className="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-white/5 dark:hover:text-white transition-colors font-medium text-sm">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-            Kembali ke Editor
-          </button>
+    <div className="animate-[fadeIn_0.5s_ease_forwards]">
+      
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <Link to="/cv/build" className="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-white/5 dark:hover:text-white transition-colors font-medium text-sm">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+          Kembali ke Editor
+        </Link>
           
           <div className="flex items-center gap-3">
              <button className="px-5 py-2.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white text-sm font-semibold border border-slate-400 dark:border-slate-600 transition-all flex items-center gap-2">
@@ -37,7 +37,7 @@ export default function CvResultView() {
                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
                  AI Editor
                </div>
-               <textarea id="ai-edit-prompt" rows="3" placeholder="Beri tahu AI apa yang perlu diubah (mis. 'Buat lebih profesional', 'Terjemahkan ke Indonesia')" className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-700 placeholder-slate-400 focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none resize-none mb-3 shadow-inner"></textarea>
+               <textarea id="ai-edit-prompt" rows={3} placeholder="Beri tahu AI apa yang perlu diubah (mis. 'Buat lebih profesional', 'Terjemahkan ke Indonesia')" className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-700 placeholder-slate-400 focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 outline-none resize-none mb-3 shadow-inner"></textarea>
                <div className="flex justify-end gap-2">
                  <button id="btn-cancel-ai" className="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:bg-slate-100 transition-colors">Cancel</button>
                  <button className="px-3 py-1.5 rounded-lg bg-indigo-600 text-white text-xs font-semibold hover:bg-indigo-500 transition-colors flex items-center gap-1 shadow-md shadow-indigo-200">
@@ -191,7 +191,6 @@ export default function CvResultView() {
           </div>
         </div>
 
-      </div>
-    </>
+    </div>
   );
 }

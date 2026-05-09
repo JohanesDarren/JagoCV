@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { PrismaClient, DocumentType, DocumentStatus, ChatRole } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { GoogleGenAI } from '@google/genai';
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ if (!process.env.JWT_SECRET) {
   process.exit(1);
 }
 const JWT_SECRET = process.env.JWT_SECRET;
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 app.use(cors({
   origin: ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173'],
@@ -317,6 +319,59 @@ app.post('/api/chat', authenticateToken, async (req: any, res: Response) => {
     res.status(201).json(message);
   } catch (error) {
     res.status(400).json({ error: 'Gagal menyimpan pesan chat' });
+  }
+});
+
+// 11.5 Generate AI Chat Response
+app.post('/api/chat/generate', authenticateToken, async (req: any, res: Response) => {
+  const { prompt, documentId } = req.body;
+  if (!prompt) {
+    return res.status(400).json({ error: 'Prompt is required' });
+  }
+
+  try {
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
+    });
+    
+    const text = response.text || "Maaf, saya tidak dapat merespons saat ini.";
+
+    // Simpan pesan user
+    await prisma.chatMessage.create({
+      data: {
+        content: prompt,
+        role: 'USER',
+        userId: req.user.id,
+        documentId: documentId || null
+      }
+    });
+
+    // Simpan respons AI
+    const aiMessage = await prisma.chatMessage.create({
+      data: {
+        content: text,
+        role: 'ASSISTANT',
+        userId: req.user.id,
+        documentId: documentId || null
+      }
+    });
+
+    // Catat log penggunaan AI
+    await prisma.aiUsageLog.create({
+      data: {
+        userId: req.user.id,
+        feature: 'CHAT',
+        creditsUsed: 1,
+        documentId: documentId || null,
+        promptSummary: prompt.substring(0, 50)
+      }
+    });
+
+    res.json(aiMessage);
+  } catch (error: any) {
+    console.error("AI Generation Error:", error);
+    res.status(500).json({ error: 'Gagal menghasilkan respons AI' });
   }
 });
 

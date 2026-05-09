@@ -1,9 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export default function DashboardView() {
   return (
-    <>
-      <div id="view-dashboard" className="animate-[fadeIn_0.5s_ease_forwards] block">
+    <div className="animate-[fadeIn_0.5s_ease_forwards]">
       
       {/* Generator Hero */}
       <header className="mb-14 flex flex-col items-center text-center max-w-3xl mx-auto pt-8">
@@ -28,7 +28,7 @@ export default function DashboardView() {
           <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 relative z-10">CV Optimal ATS</h3>
           <p className="text-[15px] text-slate-600 dark:text-slate-400 mb-8 flex-1 leading-relaxed relative z-10">Dokumen berbasis teks yang semantik dan bersih, dirancang khusus untuk melewati Sistem Pelacakan Pelamar (ATS) di perusahaan teknologi top.</p>
           <div className="flex items-center mt-auto relative z-10 w-full">
-            <button id="btn-create-cv" className="w-full bg-[#1E5EFF] hover:bg-blue-600 text-white font-bold py-3 rounded-xl transition-all text-sm">Buat CV ATS</button>
+            <Link to="/cv/create" className="w-full bg-[#1E5EFF] hover:bg-blue-600 text-white font-bold py-3 rounded-xl transition-all text-sm block text-center">Buat CV ATS</Link>
           </div>
         </article>
 
@@ -42,7 +42,7 @@ export default function DashboardView() {
           <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 relative z-10">Resume Visual Modern</h3>
           <p className="text-[15px] text-slate-600 dark:text-slate-400 mb-8 flex-1 leading-relaxed relative z-10">Resume PDF yang diformat indah dengan tata letak modern, tipografi, dan hierarki visual yang jelas untuk perekrut.</p>
           <div className="flex items-center mt-auto relative z-10 w-full">
-            <button id="btn-design-resume" className="w-full bg-[#1E5EFF] hover:bg-blue-600 text-white font-bold py-3 rounded-xl transition-all text-sm">Desain Resume</button>
+            <Link to="/resume/design" className="w-full bg-[#1E5EFF] hover:bg-blue-600 text-white font-bold py-3 rounded-xl transition-all text-sm block text-center">Desain Resume</Link>
           </div>
         </article>
 
@@ -56,7 +56,7 @@ export default function DashboardView() {
           <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 relative z-10">Portofolio Interaktif</h3>
           <p className="text-[15px] text-slate-600 dark:text-slate-400 mb-8 flex-1 leading-relaxed relative z-10">Dasbor web Bento-grid interaktif yang ramah seluler untuk memamerkan proyek dan bio Anda secara online.</p>
           <div className="flex items-center mt-auto relative z-10 w-full">
-            <button id="btn-build-portfolio" className="w-full bg-[#1E5EFF] hover:bg-blue-600 text-white font-bold py-3 rounded-xl transition-all text-sm">Buat Portofolio</button>
+            <Link to="/portfolio/build" className="w-full bg-[#1E5EFF] hover:bg-blue-600 text-white font-bold py-3 rounded-xl transition-all text-sm block text-center">Buat Portofolio</Link>
           </div>
         </article>
 
@@ -131,7 +131,6 @@ export default function DashboardView() {
           </table>
         </div>
       </div>
-      </div> {/* End dashboard view */}
-    </>
+    </div>
   );
 }

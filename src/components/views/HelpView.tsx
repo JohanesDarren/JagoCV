@@ -1,14 +1,14 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export default function HelpView() {
   return (
-    <>
-      <div id="view-help" className="hidden animate-[fadeIn_0.5s_ease_forwards]">
-        <div className="max-w-3xl mx-auto mt-10">
-          <button id="btn-back-from-help" className="mb-6 flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-white/5 dark:hover:text-white px-3 py-2 rounded-xl transition-colors font-semibold">
+    <div className="animate-[fadeIn_0.5s_ease_forwards]">
+      <div className="max-w-3xl mx-auto mt-10">
+          <Link to="/profile" className="mb-6 flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-white/5 dark:hover:text-white px-3 py-2 rounded-xl transition-colors font-semibold w-fit">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Kembali
-          </button>
+          </Link>
           
           <div className="bg-white dark:bg-[#0B1221] rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none overflow-hidden">
              
@@ -86,7 +86,6 @@ export default function HelpView() {
              </div>
           </div>
         </div>
-      </div>
-    </>
+    </div>
   );
 }

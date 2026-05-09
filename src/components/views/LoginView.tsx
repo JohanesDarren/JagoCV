@@ -1,9 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../controllers/useAuth';
 
 export default function LoginView() {
+  const navigate = useNavigate();
+  const { login, isLoading, error } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) return;
+    
+    try {
+      await login({ email, password });
+      navigate('/dashboard');
+    } catch (err) {
+      console.error('Login failed', err);
+    }
+  };
+
   return (
-    <>
-    <div id="view-login" className="hidden w-full min-h-screen bg-white dark:bg-[#070B19]">
+    <div className="w-full min-h-screen bg-white dark:bg-[#070B19]">
       <div className="flex min-h-screen flex-col lg:flex-row w-full">
         
         {/* Left Side: Brand & Abstract */}
@@ -14,17 +32,17 @@ export default function LoginView() {
           
           {/* Logo & Back Button */}
           <div className="relative z-10 flex items-center justify-between w-full">
-            <div className="flex items-center cursor-pointer group w-fit" onClick={() => { (window as any).document.getElementById('view-login').classList.remove('flex'); document.getElementById('view-login').classList.add('hidden'); document.getElementById('view-landing').classList.remove('hidden'); document.getElementById('view-landing').classList.add('flex', 'flex-col'); }}>
+            <Link to="/" className="flex items-center cursor-pointer group w-fit">
               <img src="/JagoCV.png" alt="jagoCV Logo" className="h-12 w-auto block dark:hidden group-hover:scale-105 transition-transform" />
               <img src="/JagoCV%20BW.png" alt="jagoCV Logo" className="h-12 w-auto hidden dark:block group-hover:scale-105 transition-transform" />
-            </div>
-            <button onClick={() => { (window as any).document.getElementById('view-login').classList.remove('flex'); document.getElementById('view-login').classList.add('hidden'); document.getElementById('view-landing').classList.remove('hidden'); document.getElementById('view-landing').classList.add('flex', 'flex-col'); }} className="hidden sm:flex items-center gap-2 text-white/80 hover:text-white transition-all hover:bg-white/10 px-4 py-2 rounded-xl backdrop-blur-md border border-white/5 hover:border-white/20 text-sm font-semibold">
+            </Link>
+            <Link to="/" className="hidden sm:flex items-center gap-2 text-white/80 hover:text-white transition-all hover:bg-white/10 px-4 py-2 rounded-xl backdrop-blur-md border border-white/5 hover:border-white/20 text-sm font-semibold">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
               Kembali
-            </button>
-            <button onClick={() => { (window as any).document.getElementById('view-login').classList.remove('flex'); document.getElementById('view-login').classList.add('hidden'); document.getElementById('view-landing').classList.remove('hidden'); document.getElementById('view-landing').classList.add('flex', 'flex-col'); }} className="sm:hidden flex items-center justify-center text-white/80 hover:text-white transition-all hover:bg-white/10 w-10 h-10 rounded-xl backdrop-blur-md border border-white/5 hover:border-white/20">
+            </Link>
+            <Link to="/" className="sm:hidden flex items-center justify-center text-white/80 hover:text-white transition-all hover:bg-white/10 w-10 h-10 rounded-xl backdrop-blur-md border border-white/5 hover:border-white/20">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-            </button>
+            </Link>
           </div>
 
           {/* Content Message */}
@@ -71,35 +89,35 @@ export default function LoginView() {
                 <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
               </div>
 
-              <form className="space-y-4 text-left" onSubmit={(e) => e.preventDefault()}>
+              <form className="space-y-4 text-left" onSubmit={handleSubmit}>
+                {error && <div className="text-red-500 text-sm p-3 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-200 dark:border-red-800">{error}</div>}
                 <div>
                   <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Email</label>
-                  <input id="login-email" type="email" className="w-full bg-white dark:bg-[#0B1221] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 sm:py-3.5 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all shadow-sm" placeholder="nama@email.com" />
+                  <input required value={email} onChange={(e) => setEmail(e.target.value)} type="email" className="w-full bg-white dark:bg-[#0B1221] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 sm:py-3.5 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all shadow-sm" placeholder="nama@email.com" />
                 </div>
                 <div>
                   <div className="flex justify-between items-center mb-2">
                     <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">Password</label>
                     <a href="#" className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors">Lupa?</a>
                   </div>
-                  <input id="login-password" type="password" className="w-full bg-white dark:bg-[#0B1221] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 sm:py-3.5 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all shadow-sm" placeholder="••••••••" />
+                  <input required value={password} onChange={(e) => setPassword(e.target.value)} type="password" className="w-full bg-white dark:bg-[#0B1221] border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 sm:py-3.5 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all shadow-sm" placeholder="••••••••" />
                 </div>
                 
                 <div className="pt-2">
-                  <button type="submit" id="btn-login-submit" className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-[1px]">
-                    Masuk Sekarang
+                  <button disabled={isLoading} type="submit" className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-[1px] disabled:opacity-50">
+                    {isLoading ? 'Memproses...' : 'Masuk Sekarang'}
                     <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                   </button>
                 </div>
               </form>
 
               <div className="mt-8 text-center text-sm text-slate-600 dark:text-slate-400 pt-4 border-t border-slate-100 dark:border-slate-800/50">
-                Belum punya akun? <a href="#" id="link-to-register" className="font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 transition-colors ml-1">Daftar sekarang</a>
+                Belum punya akun? <Link to="/register" className="font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 transition-colors ml-1">Daftar sekarang</Link>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    </>
   );
 }
