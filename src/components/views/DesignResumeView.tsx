@@ -1,17 +1,25 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { LayoutSelection } from './LayoutSelection';
+import { useWizard } from '../../controllers/useWizard';
 
 export default function DesignResumeView() {
+  const navigate = useNavigate();
+  const [isAiMode, setIsAiMode] = useState(false);
   const [aiStep, setAiStep] = useState(1);
+  const { currentStep, nextStep, prevStep, goToStep } = useWizard(1, 4);
+
+  const handleGenerateResume = () => {
+    navigate('/resume/result');
+  };
 
   return (
-    <>
-      <div id="view-design-resume" className="hidden animate-[fadeIn_0.5s_ease_forwards]">
-        
-        <button id="btn-back-dashboard-resume" className="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-white/5 dark:hover:text-white mb-6 transition-colors font-medium text-sm">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-          Kembali ke Dasbor
-        </button>
+    <div className="animate-[fadeIn_0.5s_ease_forwards]">
+      
+      <Link to="/dashboard" className="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-white/5 dark:hover:text-white mb-6 transition-colors font-medium text-sm w-fit">
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        Kembali ke Dasbor
+      </Link>
 
         {/* Builder Header */}
         <header className="mb-8 pb-6 border-b border-slate-200 dark:border-slate-800 flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -33,43 +41,45 @@ export default function DesignResumeView() {
           <div className="w-full lg:w-1/2 space-y-6 flex flex-col">
             
             {/* Input Mode Toggle (Resume) */}
-            <div className="rounded-[16px] p-1.5 border border-slate-200 dark:border-[#2A3143] bg-transparent flex items-center mb-2 bg-white/80 dark:bg-[#0B1221]/80 border-slate-200 dark:border-slate-800">
-              <button id="tab-resume-manual" className="flex-1 py-2.5 rounded-xl bg-indigo-600 shadow-[0_0_15px_rgba(79,70,229,0.4)] text-white text-sm font-semibold transition-all">Form Manual</button>
-              <button id="tab-resume-ai" className="flex-1 py-2.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-white/5 dark:hover:text-white text-sm font-semibold transition-all flex items-center justify-center gap-2 group">
-                <svg className="w-4 h-4 text-indigo-500 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+            <div className="rounded-[16px] p-1.5 border border-slate-200 dark:border-[#2A3143] bg-transparent flex items-center mb-2 bg-white/80 dark:bg-[#0B1221]/80">
+              <button onClick={() => setIsAiMode(false)} className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all ${!isAiMode ? 'bg-indigo-600 shadow-[0_0_15px_rgba(79,70,229,0.4)] text-white' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-white/5 dark:hover:text-white'}`}>Form Manual</button>
+              <button onClick={() => setIsAiMode(true)} className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center justify-center gap-2 group ${isAiMode ? 'bg-indigo-600 shadow-[0_0_15px_rgba(79,70,229,0.4)] text-white' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-white/5 dark:hover:text-white'}`}>
+                <svg className={`w-4 h-4 group-hover:animate-pulse ${isAiMode ? 'text-white' : 'text-indigo-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
                 Arsitek Desain AI
               </button>
             </div>
 
             {/* CONTAINER: MANUAL FORMS (RESUME) */}
-            <div id="container-resume-manual" className="space-y-6 block animate-[fadeIn_0.3s_ease_forwards]">
+            {!isAiMode && (
+              <div className="space-y-6 block animate-[fadeIn_0.3s_ease_forwards]">
             
                         {/* Wizard Progress Animation */}
             <div id="resume-wizard-progress" className="w-full mb-8 pt-4">
               <div className="flex items-center justify-between relative">
                 <div className="absolute left-0 top-5 -translate-y-1/2 w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full z-0"></div>
-                <div id="resume-progress-bar" className="absolute left-0 top-5 -translate-y-1/2 h-1.5 bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)] rounded-full z-0 transition-all duration-700 ease-out w-0"></div>
+                <div id="resume-progress-bar" className={`absolute left-0 top-5 -translate-y-1/2 h-1.5 bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)] rounded-full z-0 transition-all duration-700 ease-out`} style={{width: `${(currentStep - 1) * 33.33}%`}}></div>
                 
-                <div className="relative z-10 flex flex-col items-center gap-2 group resume-step-indicator active" id="resume-indicator-step-1" data-step="1">
-                  <div className="w-10 h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center font-bold text-sm shadow-[0_0_15px_rgba(99,102,241,0.4)] transition-all duration-500 scale-110">1</div>
-                  <span className="text-[11px] font-bold text-indigo-500 mt-1 transition-colors uppercase tracking-wider">Profil</span>
+                <div className={`relative z-10 flex flex-col items-center gap-2 group resume-step-indicator ${currentStep >= 1 ? 'active' : ''}`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ${currentStep >= 1 ? 'bg-indigo-500 text-white shadow-[0_0_15px_rgba(99,102,241,0.4)] scale-110' : 'bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 text-slate-400'}`}>1</div>
+                  <span className={`text-[11px] font-bold mt-1 transition-colors uppercase tracking-wider ${currentStep >= 1 ? 'text-indigo-500' : 'text-slate-400 hidden sm:block'}`}>Profil</span>
                 </div>
-                <div className="relative z-10 flex flex-col items-center gap-2 group resume-step-indicator" id="resume-indicator-step-2" data-step="2">
-                  <div className="w-10 h-10 rounded-full bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 text-slate-400 flex items-center justify-center font-bold text-sm transition-all duration-500">2</div>
-                  <span className="text-[11px] font-bold text-slate-400 mt-1 transition-colors uppercase tracking-wider hidden sm:block">Keterampilan</span>
+                <div className={`relative z-10 flex flex-col items-center gap-2 group resume-step-indicator ${currentStep >= 2 ? 'active' : ''}`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ${currentStep >= 2 ? 'bg-indigo-500 text-white shadow-[0_0_15px_rgba(99,102,241,0.4)] scale-110' : 'bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 text-slate-400'}`}>2</div>
+                  <span className={`text-[11px] font-bold mt-1 transition-colors uppercase tracking-wider ${currentStep >= 2 ? 'text-indigo-500' : 'text-slate-400 hidden sm:block'}`}>Keterampilan</span>
                 </div>
-                <div className="relative z-10 flex flex-col items-center gap-2 group resume-step-indicator" id="resume-indicator-step-3" data-step="3">
-                  <div className="w-10 h-10 rounded-full bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 text-slate-400 flex items-center justify-center font-bold text-sm transition-all duration-500">3</div>
-                  <span className="text-[11px] font-bold text-slate-400 mt-1 transition-colors uppercase tracking-wider hidden sm:block">Riwayat</span>
+                <div className={`relative z-10 flex flex-col items-center gap-2 group resume-step-indicator ${currentStep >= 3 ? 'active' : ''}`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ${currentStep >= 3 ? 'bg-indigo-500 text-white shadow-[0_0_15px_rgba(99,102,241,0.4)] scale-110' : 'bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 text-slate-400'}`}>3</div>
+                  <span className={`text-[11px] font-bold mt-1 transition-colors uppercase tracking-wider ${currentStep >= 3 ? 'text-indigo-500' : 'text-slate-400 hidden sm:block'}`}>Riwayat</span>
                 </div>
-                <div className="relative z-10 flex flex-col items-center gap-2 group resume-step-indicator" id="resume-indicator-step-4" data-step="4">
-                  <div className="w-10 h-10 rounded-full bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 text-slate-400 flex items-center justify-center font-bold text-sm transition-all duration-500">4</div>
-                  <span className="text-[11px] font-bold text-slate-400 mt-1 transition-colors uppercase tracking-wider hidden sm:block">Selesai</span>
+                <div className={`relative z-10 flex flex-col items-center gap-2 group resume-step-indicator ${currentStep >= 4 ? 'active' : ''}`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ${currentStep >= 4 ? 'bg-indigo-500 text-white shadow-[0_0_15px_rgba(99,102,241,0.4)] scale-110' : 'bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 text-slate-400'}`}>4</div>
+                  <span className={`text-[11px] font-bold mt-1 transition-colors uppercase tracking-wider ${currentStep >= 4 ? 'text-indigo-500' : 'text-slate-400 hidden sm:block'}`}>Selesai</span>
                 </div>
               </div>
             </div>
             {/* Personal Info & Photo */}
-            <div id="resume-step-1" className="resume-step block rounded-[24px] p-6 md:p-8 border border-slate-200 dark:border-[#2A3143] bg-transparent">
+            {currentStep === 1 && (
+            <div className="resume-step block rounded-[24px] p-6 md:p-8 border border-slate-200 dark:border-[#2A3143] bg-transparent">
               <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-5 flex items-center gap-2">
                 <span className="w-6 h-6 rounded-md bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 text-xs">1</span>
                 Info Profil
@@ -116,13 +126,15 @@ export default function DesignResumeView() {
 
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Tentang Saya (Bio)</label>
-                <textarea rows="3" placeholder="Tulis bio singkat yang menarik sesuai kepribadian karir Anda..." className="w-full bg-white dark:bg-[#1A2133] border border-slate-300 dark:border-[#2A3143] rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-slate-200 placeholder-slate-600 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all resize-none"></textarea>
+                <textarea rows={3} placeholder="Tulis bio singkat yang menarik sesuai kepribadian karir Anda..." className="w-full bg-white dark:bg-[#1A2133] border border-slate-300 dark:border-[#2A3143] rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-slate-200 placeholder-slate-600 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all resize-none"></textarea>
               </div>
-              <div className="flex justify-end mt-8 pt-6 border-t border-slate-200 dark:border-slate-800/50"><button type="button" onClick={() => { (window as any).goToResumeStep(2) }} className="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-indigo-500/25 flex items-center gap-2 active:scale-95">Selanjutnya <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg></button></div>
+              <div className="flex justify-end mt-8 pt-6 border-t border-slate-200 dark:border-slate-800/50"><button type="button" onClick={nextStep} className="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-indigo-500/25 flex items-center gap-2 active:scale-95">Selanjutnya <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg></button></div>
             </div>
+            )}
 
             {/* Skills & Visual Elements */}
-            <div id="resume-step-2" className="resume-step hidden rounded-[24px] p-6 md:p-8 border border-slate-200 dark:border-[#2A3143] bg-transparent">
+            {currentStep === 2 && (
+            <div className="resume-step rounded-[24px] p-6 md:p-8 border border-slate-200 dark:border-[#2A3143] bg-transparent">
               <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-5 flex items-center gap-2">
                 <span className="w-6 h-6 rounded-md bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 text-xs">2</span>
                 Keterampilan & Kekuatan
@@ -162,11 +174,13 @@ export default function DesignResumeView() {
                   </div>
                 </div>
               </div>
-              <div className="flex justify-between mt-8 pt-6 border-t border-slate-200 dark:border-slate-800/50"><button type="button" onClick={() => { (window as any).goToResumeStep(1) }} className="bg-white dark:bg-[#1A2133] hover:bg-slate-200 dark:hover:bg-[#1A2133] text-slate-700 dark:text-slate-300 px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2 active:scale-95"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg> Sebelumnya</button><button type="button" onClick={() => { (window as any).goToResumeStep(3) }} className="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-indigo-500/25 flex items-center gap-2 active:scale-95">Selanjutnya <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg></button></div>
+              <div className="flex justify-between mt-8 pt-6 border-t border-slate-200 dark:border-slate-800/50"><button type="button" onClick={prevStep} className="bg-white dark:bg-[#1A2133] hover:bg-slate-200 dark:hover:bg-[#1A2133] text-slate-700 dark:text-slate-300 px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2 active:scale-95"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg> Sebelumnya</button><button type="button" onClick={nextStep} className="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-indigo-500/25 flex items-center gap-2 active:scale-95">Selanjutnya <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg></button></div>
             </div>
+            )}
 
             {/* Experience & Pendidikan (Visual Resume) */}
-            <div id="resume-step-3" className="resume-step hidden rounded-[24px] p-6 md:p-8 border border-slate-200 dark:border-[#2A3143] bg-transparent">
+            {currentStep === 3 && (
+            <div className="resume-step rounded-[24px] p-6 md:p-8 border border-slate-200 dark:border-[#2A3143] bg-transparent">
               <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-5 flex items-center gap-2">
                 <span className="w-6 h-6 rounded-md bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 text-xs">3</span>
                 Pengalaman & Pendidikan
@@ -194,7 +208,7 @@ export default function DesignResumeView() {
                       <input type="text" placeholder="Tgl Mulai (misal Jan 2022)" className="bg-white dark:bg-[#1A2133] border border-slate-300 dark:border-[#2A3143] rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-600 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all" />
                       <input type="text" placeholder="Tgl Selesai (misal Sekarang)" className="bg-white dark:bg-[#1A2133] border border-slate-300 dark:border-[#2A3143] rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-600 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all" />
                    </div>
-                   <textarea rows="2" placeholder="Tanggung jawab utama dan pencapaian..." className="w-full bg-white dark:bg-[#1A2133] border border-slate-300 dark:border-[#2A3143] rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-slate-200 placeholder-slate-600 outline-none resize-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"></textarea>
+                   <textarea rows={2} placeholder="Tanggung jawab utama dan pencapaian..." className="w-full bg-white dark:bg-[#1A2133] border border-slate-300 dark:border-[#2A3143] rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-slate-200 placeholder-slate-600 outline-none resize-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"></textarea>
                 </div>
               </div>
 
@@ -222,11 +236,13 @@ export default function DesignResumeView() {
                    </div>
                  </div>
               </div>
-              <div className="flex justify-between mt-8 pt-6 border-t border-slate-200 dark:border-slate-800/50"><button type="button" onClick={() => { (window as any).goToResumeStep(2) }} className="bg-white dark:bg-[#1A2133] hover:bg-slate-200 dark:hover:bg-[#1A2133] text-slate-700 dark:text-slate-300 px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2 active:scale-95"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg> Sebelumnya</button><button type="button" onClick={() => { (window as any).goToResumeStep(4) }} className="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-indigo-500/25 flex items-center gap-2 active:scale-95">Selanjutnya <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg></button></div>
+              <div className="flex justify-between mt-8 pt-6 border-t border-slate-200 dark:border-slate-800/50"><button type="button" onClick={prevStep} className="bg-white dark:bg-[#1A2133] hover:bg-slate-200 dark:hover:bg-[#1A2133] text-slate-700 dark:text-slate-300 px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2 active:scale-95"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg> Sebelumnya</button><button type="button" onClick={nextStep} className="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-indigo-500/25 flex items-center gap-2 active:scale-95">Selanjutnya <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg></button></div>
             </div>
+            )}
 
              {/* Projects & Portfolio (Visual) */}
-             <div id="resume-step-4" className="resume-step hidden rounded-[24px] p-6 md:p-8 border border-slate-200 dark:border-[#2A3143] bg-transparent">
+             {currentStep === 4 && (
+             <div className="resume-step rounded-[24px] p-6 md:p-8 border border-slate-200 dark:border-[#2A3143] bg-transparent">
                <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-5 flex items-center gap-2">
                  <span className="w-6 h-6 rounded-md bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 text-xs">4</span>
                  Proyek Unggulan
@@ -249,7 +265,7 @@ export default function DesignResumeView() {
                      <input type="text" placeholder="Nama Proyek (misal: E-Commerce App)" className="col-span-1 bg-white dark:bg-[#1A2133] border border-slate-300 dark:border-[#2A3143] rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white placeholder-slate-500 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all" />
                      <input type="url" placeholder="Tautan Proyek / URL" className="col-span-1 bg-white dark:bg-[#1A2133] border border-slate-300 dark:border-[#2A3143] rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white placeholder-slate-500 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all" />
                   </div>
-                  <textarea rows="3" placeholder="Jelaskan tujuan proyek, stack teknologi yang digunakan, serta dampak atau hasil dari proyek ini..." className="w-full bg-white dark:bg-[#1A2133] border border-slate-300 dark:border-[#2A3143] rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-slate-200 placeholder-slate-500 outline-none resize-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all mb-4"></textarea>
+                  <textarea rows={3} placeholder="Jelaskan tujuan proyek, stack teknologi yang digunakan, serta dampak atau hasil dari proyek ini..." className="w-full bg-white dark:bg-[#1A2133] border border-slate-300 dark:border-[#2A3143] rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-slate-200 placeholder-slate-500 outline-none resize-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all mb-4"></textarea>
                   
                   {/* Add thumbnail */}
                   <div className="flex items-center gap-4">
@@ -282,11 +298,13 @@ export default function DesignResumeView() {
                </div>
                
                {/* Aksi Button */}
-               <div className="flex justify-between mt-8 pt-6 border-t border-slate-200 dark:border-slate-800/50"><button type="button" onClick={() => { (window as any).goToResumeStep(3) }} className="bg-white dark:bg-[#1A2133] hover:bg-slate-200 dark:hover:bg-[#1A2133] text-slate-700 dark:text-slate-300 px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2 active:scale-95"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg> Sebelumnya</button><button type="button" onClick={() => { (window as any).goToResumeStep(5) }} className="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-indigo-500/25 flex items-center gap-2 active:scale-95">Pilih Layout <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg></button></div>
+               <div className="flex justify-between mt-8 pt-6 border-t border-slate-200 dark:border-slate-800/50"><button type="button" onClick={prevStep} className="bg-white dark:bg-[#1A2133] hover:bg-slate-200 dark:hover:bg-[#1A2133] text-slate-700 dark:text-slate-300 px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2 active:scale-95"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg> Sebelumnya</button><button type="button" onClick={nextStep} className="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-indigo-500/25 flex items-center gap-2 active:scale-95">Pilih Layout <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg></button></div>
              </div>
+             )}
              
              {/* Section 2: Template Select & Generate */}
-             <div id="resume-step-5" className="resume-step hidden w-full">
+             {currentStep === 5 && (
+             <div className="resume-step w-full">
                <div className="grid grid-cols-1 gap-6">
                  
                  <LayoutSelection theme="indigo" stepNumber={5} />
@@ -295,8 +313,8 @@ export default function DesignResumeView() {
                  <div className="rounded-[24px] p-6 border border-slate-200 dark:border-[#2A3143] bg-transparent mt-6">
                    <div className="flex flex-col gap-4">
                     <div className="flex items-center gap-4">
-                      <button type="button" onClick={() => { (window as any).goToResumeStep(4) }} className="shrink-0 bg-white dark:bg-[#1A2133] hover:bg-slate-200 dark:hover:bg-[#1A2133] text-slate-700 dark:text-slate-300 px-6 py-4 rounded-xl font-bold transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer" title="Kembali"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg></button>
-                      <button id="btn-generate-resume" className="flex-1 bg-[#5A45FF] hover:bg-[#4C3BDE] text-white px-8 py-4 rounded-xl font-bold transition-all shadow-[0_0_20px_rgba(90,69,255,0.4)] flex items-center justify-center gap-2 active:scale-95 group">Buat AI Resume <svg className="w-5 h-5 group-hover:-translate-y-1 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg></button>
+                      <button type="button" onClick={prevStep} className="shrink-0 bg-white dark:bg-[#1A2133] hover:bg-slate-200 dark:hover:bg-[#1A2133] text-slate-700 dark:text-slate-300 px-6 py-4 rounded-xl font-bold transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer" title="Kembali"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg></button>
+                      <button onClick={handleGenerateResume} className="flex-1 bg-[#5A45FF] hover:bg-[#4C3BDE] text-white px-8 py-4 rounded-xl font-bold transition-all shadow-[0_0_20px_rgba(90,69,255,0.4)] flex items-center justify-center gap-2 active:scale-95 group">Buat AI Resume <svg className="w-5 h-5 group-hover:-translate-y-1 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg></button>
                     </div>
                     <p className="text-center text-[10px] text-slate-500 mt-0 px-4 leading-relaxed">
                       Dengan menekan buat, Anda setuju untuk memformat data Anda mengikuti pedoman parser ATS global melalui jagoCV Engine.
@@ -306,11 +324,13 @@ export default function DesignResumeView() {
                
                </div>
              </div>
-
-            </div> {/* END CONTAINER: MANUAL FORMS (RESUME) */}
+             )}
+             </div>
+            )} {/* END CONTAINER: MANUAL FORMS (RESUME) */}
 
             {/* CONTAINER: AI MAGIC STORY (RESUME) */}
-            <div id="container-resume-ai" className="hidden animate-[fadeIn_0.3s_ease_forwards]">
+            {isAiMode && (
+            <div className="animate-[fadeIn_0.3s_ease_forwards]">
               <div className="rounded-[24px] p-6 md:p-8 border border-slate-200 dark:border-[#2A3143] bg-transparent border border-indigo-500/30 relative overflow-hidden">
                 {/* Decorative Glow */}
                 <div className="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/20 blur-[40px] rounded-full pointer-events-none"></div>
@@ -335,7 +355,7 @@ export default function DesignResumeView() {
                       <button className="shrink-0 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-[#0B1221] text-slate-600 dark:text-slate-400 text-[11px] font-medium hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-colors whitespace-nowrap">UX Designer</button>
                       <button className="shrink-0 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-[#0B1221] text-slate-600 dark:text-slate-400 text-[11px] font-medium hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-colors whitespace-nowrap">Creative Director</button>
                   </div>
-                  <textarea rows="6" placeholder="Ketik prompt Anda di sini... (misal: Saya seorang Senior UX Designer dengan pengalaman 5 tahun di bidang FinTech. Saya ingin resume ini terlihat modern dan berani untuk melamar di agensi kreatif.)" className="w-full bg-transparent p-5 text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 outline-none resize-none leading-relaxed"></textarea>
+                  <textarea rows={6} placeholder="Ketik prompt Anda di sini... (misal: Saya seorang Senior UX Designer dengan pengalaman 5 tahun di bidang FinTech. Saya ingin resume ini terlihat modern dan berani untuk melamar di agensi kreatif.)" className="w-full bg-transparent p-5 text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 outline-none resize-none leading-relaxed"></textarea>
                   
                   <div className="px-5 py-3 bg-slate-50/80 dark:bg-[#070B19]/80 border-t border-slate-200 dark:border-slate-800/50 flex justify-between items-center">
                      <div className="flex items-center gap-2">
@@ -362,7 +382,7 @@ export default function DesignResumeView() {
                     </div>
                     <LayoutSelection theme="indigo" stepNumber={5} />
                     <div className="flex items-center gap-3 justify-end mt-2">
-                       <button id="btn-generate-resume-ai" className="bg-[#5A45FF] hover:bg-[#4C3BDE] text-white px-6 py-3 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(90,69,255,0.4)] active:scale-95 group">
+                       <button onClick={handleGenerateResume} className="bg-[#5A45FF] hover:bg-[#4C3BDE] text-white px-6 py-3 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(90,69,255,0.4)] active:scale-95 group">
                           Buat AI Resume
                           <svg className="w-5 h-5 group-hover:-translate-y-1 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
                        </button>
@@ -370,7 +390,8 @@ export default function DesignResumeView() {
                   </div>
                 )}
               </div>
-            </div> {/* END CONTAINER: AI MAGIC STORY (RESUME) */}
+            </div>
+            )} {/* END CONTAINER: AI MAGIC STORY (RESUME) */}
           </div> {/* End Left Col Container */}
 
           {/* Right Col: Live Preview */}
@@ -448,6 +469,5 @@ export default function DesignResumeView() {
 
         </div>
       </div>
-    </>
   );
 }

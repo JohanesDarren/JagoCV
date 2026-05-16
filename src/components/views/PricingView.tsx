@@ -1,15 +1,15 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export default function PricingView() {
   return (
-    <>
-      <div id="view-pricing" className="hidden animate-[fadeIn_0.5s_ease_forwards]">
-        <div className="max-w-6xl mx-auto mt-6">
+    <div className="animate-[fadeIn_0.5s_ease_forwards]">
+      <div className="max-w-6xl mx-auto mt-6">
           {/* Back button */}
-          <button id="btn-back-from-pricing" className="mb-10 flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-white/5 dark:hover:text-white px-3 py-2 rounded-xl transition-colors font-semibold">
+          <Link to="/profile" className="mb-10 flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-white/5 dark:hover:text-white px-3 py-2 rounded-xl transition-colors font-semibold w-fit">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Kembali ke Profil
-          </button>
+          </Link>
           
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-4">Langkah Tepat Menuju<br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Karier Impian</span></h2>
@@ -136,7 +136,6 @@ export default function PricingView() {
             
           </div>
         </div>
-      </div>
-    </>
+    </div>
   );
 }

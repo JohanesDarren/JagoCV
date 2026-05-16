@@ -1,9 +1,13 @@
 import React from 'react';
+import { useTheme } from '../../controllers/useTheme';
+
+import { Link } from 'react-router-dom';
 
 export default function LandingView() {
+  const { toggleTheme } = useTheme();
   return (
     <>
-    <div id="view-landing" className="flex-col w-full min-h-screen overflow-x-hidden block">
+    <div className="flex flex-col w-full min-h-screen overflow-x-hidden">
       
       {/* Background Elements (Fixed so they span scrolling) */}
       <div className="fixed top-1/4 left-1/4 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none z-0"></div>
@@ -23,12 +27,12 @@ export default function LandingView() {
             <a href="#pricing" className="hidden md:block text-slate-700 dark:text-slate-300 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-white/5 dark:hover:text-white font-medium transition-colors">Langganan</a>
             <a href="#faq" className="hidden md:block text-slate-700 dark:text-slate-300 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-white/5 dark:hover:text-white font-medium transition-colors">FAQ</a>
             
-            <button id="theme-toggle" className="p-2 rounded-full text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
+            <button id="theme-toggle" onClick={toggleTheme} className="p-2 rounded-full text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
               <svg id="theme-icon-dark" className="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
               <svg id="theme-icon-light" className="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
             </button>
 
-            <button id="btn-nav-login" className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-blue-500/30">Masuk</button>
+            <Link to="/login" className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-blue-500/30 text-sm">Masuk</Link>
           </div>
         </div>
       </nav>
@@ -51,10 +55,10 @@ export default function LandingView() {
           </p>
           
           <div className="flex flex-col sm:flex-row items-center gap-5 animate-[slideDown_0.8s_ease_forwards]">
-            <button id="btn-launch-app" className="px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold text-lg shadow-[0_0_30px_rgba(37,99,235,0.4)] hover:shadow-[0_0_40px_rgba(37,99,235,0.6)] hover:-translate-y-1 transition-all flex items-center gap-3 w-full sm:w-auto justify-center">
+            <Link to="/login" className="px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-bold text-lg shadow-[0_0_30px_rgba(37,99,235,0.4)] hover:shadow-[0_0_40px_rgba(37,99,235,0.6)] hover:-translate-y-1 transition-all flex items-center gap-3 w-full sm:w-auto justify-center">
               Mulai Sekarang
               <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-            </button>
+            </Link>
             <a href="#features" className="px-8 py-4 bg-white/80 dark:bg-slate-800/80 hover:bg-slate-200/80 dark:hover:bg-slate-700/80 backdrop-blur-sm border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-2xl font-semibold text-lg transition-all flex items-center gap-3 w-full sm:w-auto justify-center group">
               <div className="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center group-hover:bg-slate-300 dark:group-hover:bg-slate-600 transition-colors">
                 <svg className="w-3 h-3 ml-0.5 text-slate-700 dark:text-slate-300" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
@@ -432,7 +436,7 @@ export default function LandingView() {
                   <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
                   <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
                   <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                  <svg className="w-5 h-5 fill-current text-slate-300 dark:text-slate-700" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                  <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
                 </div>
                 <p className="text-slate-600 dark:text-slate-300 text-[15px] mb-8 leading-relaxed flex-1">"Fitur Web Portfolio benar-benar jadi game changer buat aku show off campaign yang pernah aku jalanin. Sempet ragu tapi hasilnya jauh melebihi ekspektasi. Terima kasih jagoCV!"</p>
                 <div className="flex items-center gap-4 pt-6 border-t border-slate-100 dark:border-slate-800/80 mt-auto">
@@ -512,7 +516,7 @@ export default function LandingView() {
                   <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
                   <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
                   <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                  <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                  <svg className="w-5 h-5 fill-current text-slate-300 dark:text-slate-700" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
                 </div>
                 <p className="text-slate-600 dark:text-slate-300 text-[15px] mb-8 leading-relaxed flex-1">"Akhirnya nemu CV builder yang benar-benar sadar struktur ATS. Dulu sering di-ghosting rekruter, tapi sejak pakai format jagoCV, profil saya lebih gampang dilirik dan sukses tembus di startup impian."</p>
                 <div className="flex items-center gap-4 pt-6 border-t border-slate-100 dark:border-slate-800/80 mt-auto">
@@ -552,7 +556,7 @@ export default function LandingView() {
                   <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
                   <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
                   <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                  <svg className="w-5 h-5 fill-current text-slate-300 dark:text-slate-700" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                  <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
                 </div>
                 <p className="text-slate-600 dark:text-slate-300 text-[15px] mb-8 leading-relaxed flex-1">"Fitur Web Portfolio benar-benar jadi game changer buat aku show off campaign yang pernah aku jalanin. Sempet ragu tapi hasilnya jauh melebihi ekspektasi. Terima kasih jagoCV!"</p>
                 <div className="flex items-center gap-4 pt-6 border-t border-slate-100 dark:border-slate-800/80 mt-auto">
@@ -560,26 +564,6 @@ export default function LandingView() {
                   <div>
                     <h4 className="text-slate-900 dark:text-white font-bold text-base">Rina Amelia</h4>
                     <p className="text-slate-500 dark:text-slate-400 text-sm">Digital Marketer</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white dark:bg-[#0B1221] border border-slate-200 dark:border-slate-800 rounded-2xl p-8 shadow-xl shadow-slate-200/40 dark:shadow-none hover:-translate-y-1 transition-transform duration-300 relative overflow-hidden flex flex-col h-full w-[85vw] md:w-[400px]">
-              <div className="absolute -top-6 -right-2 text-9xl text-slate-100 dark:text-slate-800/20 font-serif leading-none select-none pointer-events-none">"</div>
-              <div className="relative z-10 flex flex-col h-full">
-                <div className="flex gap-1.5 text-amber-400 mb-6">
-                  <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                  <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                  <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                  <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                  <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                </div>
-                <p className="text-slate-600 dark:text-slate-300 text-[15px] mb-8 leading-relaxed flex-1">"Mantap! Sebagai engineer sering malas nulis kata-kata yang bagus di CV, AI langsung nangkep maksudku dan jadinya profesional. Bakal rekomen ke teman-teman kampus."</p>
-                <div className="flex items-center gap-4 pt-6 border-t border-slate-100 dark:border-slate-800/80 mt-auto">
-                  <div className="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold text-lg">D</div>
-                  <div>
-                    <h4 className="text-slate-900 dark:text-white font-bold text-base">Dimas Aditya</h4>
-                    <p className="text-slate-500 dark:text-slate-400 text-sm">Backend Engineer</p>
                   </div>
                 </div>
               </div>
@@ -630,7 +614,7 @@ export default function LandingView() {
                   <span className="text-sm text-slate-500 dark:text-slate-400">Ekspor Multi-Format PDF/DOCX</span>
                 </li>
               </ul>
-              <button className="btn-landing-login w-full py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors mt-auto">Mulai Gratis</button>
+              <Link to="/login" className="btn-landing-login w-full py-3.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors border-none block text-center mt-auto">Mulai Gratis</Link>
             </div>
 
 
@@ -673,7 +657,7 @@ export default function LandingView() {
                   <span className="text-sm text-slate-700 dark:text-slate-200">Unduh PDF Kualitas Tinggi tanpa Watermark</span>
                 </li>
               </ul>
-              <button className="btn-landing-login w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold hover:shadow-lg hover:shadow-blue-500/30 transition-all mt-auto transform hover:-translate-y-0.5">Pilih Go</button>
+              <Link to="/login" className="btn-landing-login w-full py-3.5 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-500 shadow-lg shadow-blue-500/25 transition-all mt-auto border-none block text-center">Pilih Go</Link>
             </div>
 
             {/* Plan 3: Lifetime / Enterprise */}
@@ -708,7 +692,7 @@ export default function LandingView() {
                   <span className="text-sm text-slate-200">Custom Subdomain (opsi link personalisasi)</span>
                 </li>
               </ul>
-              <button className="btn-landing-login relative z-10 w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold hover:shadow-lg hover:shadow-amber-500/40 transition-all mt-auto transform hover:-translate-y-0.5 border-none">Pilih Ultra</button>
+              <Link to="/login" className="btn-landing-login relative z-10 w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold hover:shadow-lg hover:shadow-amber-500/40 transition-all mt-auto transform hover:-translate-y-0.5 border-none block text-center">Pilih Ultra</Link>
             </div>
             
           </div>

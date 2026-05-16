@@ -1,17 +1,25 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { LayoutSelection } from './LayoutSelection';
+import { useWizard } from '../../controllers/useWizard';
 
 export default function BuildPortfolioView() {
+  const navigate = useNavigate();
+  const [isAiMode, setIsAiMode] = useState(false);
   const [aiStep, setAiStep] = useState(1);
+  const { currentStep, nextStep, prevStep } = useWizard(1, 6);
+
+  const handleGeneratePortfolio = () => {
+    navigate('/portfolio/result');
+  };
 
   return (
-    <>
-      <div id="view-build-portfolio" className="hidden animate-[fadeIn_0.5s_ease_forwards]">
-        
-        <button id="btn-back-dashboard-portfolio" className="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-white/5 dark:hover:text-white mb-6 transition-colors font-medium text-sm">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-          Kembali ke Dasbor
-        </button>
+    <div className="animate-[fadeIn_0.5s_ease_forwards]">
+      
+      <Link to="/dashboard" className="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-white/5 dark:hover:text-white mb-6 transition-colors font-medium text-sm w-fit">
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        Kembali ke Dasbor
+      </Link>
 
         {/* Builder Header */}
         <header className="mb-8 pb-6 border-b border-slate-200 dark:border-slate-800 flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -33,51 +41,53 @@ export default function BuildPortfolioView() {
           <div className="w-full lg:w-1/2 space-y-6 flex flex-col">
             
             {/* Input Mode Toggle (Portfolio) */}
-            <div className="rounded-[16px] p-1.5 border border-slate-200 dark:border-[#2A3143] bg-transparent flex items-center mb-2 bg-white/80 dark:bg-[#0B1221]/80 border-slate-200 dark:border-slate-800">
-              <button id="tab-portfolio-manual" className="flex-1 py-2.5 rounded-xl bg-cyan-600 shadow-[0_0_15px_rgba(8,145,178,0.4)] text-white text-sm font-semibold transition-all">Form Manual</button>
-              <button id="tab-portfolio-ai" className="flex-1 py-2.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-white/5 dark:hover:text-white text-sm font-semibold transition-all flex items-center justify-center gap-2 group">
-                <svg className="w-4 h-4 text-cyan-500 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+            <div className="rounded-[16px] p-1.5 border border-slate-200 dark:border-[#2A3143] bg-transparent flex items-center mb-2 bg-white/80 dark:bg-[#0B1221]/80">
+              <button onClick={() => setIsAiMode(false)} className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all ${!isAiMode ? 'bg-cyan-600 shadow-[0_0_15px_rgba(8,145,178,0.4)] text-white' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-white/5 dark:hover:text-white'}`}>Form Manual</button>
+              <button onClick={() => setIsAiMode(true)} className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center justify-center gap-2 group ${isAiMode ? 'bg-cyan-600 shadow-[0_0_15px_rgba(8,145,178,0.4)] text-white' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-white/5 dark:hover:text-white'}`}>
+                <svg className={`w-4 h-4 group-hover:animate-pulse ${isAiMode ? 'text-white' : 'text-cyan-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
                 Arsitek Portofolio AI
               </button>
             </div>
 
             {/* CONTAINER: MANUAL FORMS (PORTFOLIO) */}
-            <div id="container-portfolio-manual" className="space-y-6 block animate-[fadeIn_0.3s_ease_forwards]">
+            {!isAiMode && (
+              <div className="space-y-6 block animate-[fadeIn_0.3s_ease_forwards]">
             
                                       {/* Wizard Progress Animation */}
             <div id="portfolio-wizard-progress" className="w-full mb-8 pt-4">
               <div className="flex items-center justify-between relative">
                 <div className="absolute left-0 top-5 -translate-y-1/2 w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full z-0"></div>
-                <div id="portfolio-progress-bar" className="absolute left-0 top-5 -translate-y-1/2 h-1.5 bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.5)] rounded-full z-0 transition-all duration-700 ease-out w-0"></div>
+                <div id="portfolio-progress-bar" className="absolute left-0 top-5 -translate-y-1/2 h-1.5 bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.5)] rounded-full z-0 transition-all duration-700 ease-out" style={{width: `${(currentStep - 1) * 20}%`}}></div>
                 
-                <div className="relative z-10 flex flex-col items-center gap-2 group portfolio-step-indicator active" id="portfolio-indicator-step-1" data-step="1">
-                  <div className="w-10 h-10 rounded-full bg-cyan-500 text-white flex items-center justify-center font-bold text-sm shadow-[0_0_15px_rgba(6,182,212,0.4)] transition-all duration-500 scale-110">1</div>
-                  <span className="text-[11px] font-bold text-cyan-500 mt-1 transition-colors uppercase tracking-wider">Profil</span>
+                <div className={`relative z-10 flex flex-col items-center gap-2 group portfolio-step-indicator ${currentStep >= 1 ? 'active' : ''}`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ${currentStep >= 1 ? 'bg-cyan-500 text-white shadow-[0_0_15px_rgba(6,182,212,0.4)] scale-110' : 'bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 text-slate-400'}`}>1</div>
+                  <span className={`text-[11px] font-bold mt-1 transition-colors uppercase tracking-wider ${currentStep >= 1 ? 'text-cyan-500' : 'text-slate-400 hidden sm:block'}`}>Profil</span>
                 </div>
-                <div className="relative z-10 flex flex-col items-center gap-2 group portfolio-step-indicator" id="portfolio-indicator-step-2" data-step="2">
-                  <div className="w-10 h-10 rounded-full bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 text-slate-400 flex items-center justify-center font-bold text-sm transition-all duration-500">2</div>
-                  <span className="text-[11px] font-bold text-slate-400 mt-1 transition-colors uppercase tracking-wider hidden sm:block">Tautan</span>
+                <div className={`relative z-10 flex flex-col items-center gap-2 group portfolio-step-indicator ${currentStep >= 2 ? 'active' : ''}`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ${currentStep >= 2 ? 'bg-cyan-500 text-white shadow-[0_0_15px_rgba(6,182,212,0.4)] scale-110' : 'bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 text-slate-400'}`}>2</div>
+                  <span className={`text-[11px] font-bold mt-1 transition-colors uppercase tracking-wider ${currentStep >= 2 ? 'text-cyan-500' : 'text-slate-400 hidden sm:block'}`}>Tautan</span>
                 </div>
-                <div className="relative z-10 flex flex-col items-center gap-2 group portfolio-step-indicator" id="portfolio-indicator-step-3" data-step="3">
-                  <div className="w-10 h-10 rounded-full bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 text-slate-400 flex items-center justify-center font-bold text-sm transition-all duration-500">3</div>
-                  <span className="text-[11px] font-bold text-slate-400 mt-1 transition-colors uppercase tracking-wider hidden sm:block">Proyek</span>
+                <div className={`relative z-10 flex flex-col items-center gap-2 group portfolio-step-indicator ${currentStep >= 3 ? 'active' : ''}`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ${currentStep >= 3 ? 'bg-cyan-500 text-white shadow-[0_0_15px_rgba(6,182,212,0.4)] scale-110' : 'bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 text-slate-400'}`}>3</div>
+                  <span className={`text-[11px] font-bold mt-1 transition-colors uppercase tracking-wider ${currentStep >= 3 ? 'text-cyan-500' : 'text-slate-400 hidden sm:block'}`}>Proyek</span>
                 </div>
-                <div className="relative z-10 flex flex-col items-center gap-2 group portfolio-step-indicator" id="portfolio-indicator-step-4" data-step="4">
-                  <div className="w-10 h-10 rounded-full bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 text-slate-400 flex items-center justify-center font-bold text-sm transition-all duration-500">4</div>
-                  <span className="text-[11px] font-bold text-slate-400 mt-1 transition-colors uppercase tracking-wider hidden sm:block">Riwayat</span>
+                <div className={`relative z-10 flex flex-col items-center gap-2 group portfolio-step-indicator ${currentStep >= 4 ? 'active' : ''}`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ${currentStep >= 4 ? 'bg-cyan-500 text-white shadow-[0_0_15px_rgba(6,182,212,0.4)] scale-110' : 'bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 text-slate-400'}`}>4</div>
+                  <span className={`text-[11px] font-bold mt-1 transition-colors uppercase tracking-wider ${currentStep >= 4 ? 'text-cyan-500' : 'text-slate-400 hidden sm:block'}`}>Riwayat</span>
                 </div>
-                <div className="relative z-10 flex flex-col items-center gap-2 group portfolio-step-indicator" id="portfolio-indicator-step-5" data-step="5">
-                  <div className="w-10 h-10 rounded-full bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 text-slate-400 flex items-center justify-center font-bold text-sm transition-all duration-500">5</div>
-                  <span className="text-[11px] font-bold text-slate-400 mt-1 transition-colors uppercase tracking-wider hidden sm:block">Gaya</span>
+                <div className={`relative z-10 flex flex-col items-center gap-2 group portfolio-step-indicator ${currentStep >= 5 ? 'active' : ''}`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ${currentStep >= 5 ? 'bg-cyan-500 text-white shadow-[0_0_15px_rgba(6,182,212,0.4)] scale-110' : 'bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 text-slate-400'}`}>5</div>
+                  <span className={`text-[11px] font-bold mt-1 transition-colors uppercase tracking-wider ${currentStep >= 5 ? 'text-cyan-500' : 'text-slate-400 hidden sm:block'}`}>Gaya</span>
                 </div>
-                <div className="relative z-10 flex flex-col items-center gap-2 group portfolio-step-indicator" id="portfolio-indicator-step-6" data-step="6">
-                  <div className="w-10 h-10 rounded-full bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 text-slate-400 flex items-center justify-center font-bold text-sm transition-all duration-500">6</div>
-                  <span className="text-[11px] font-bold text-slate-400 mt-1 transition-colors uppercase tracking-wider hidden sm:block">Selesai</span>
+                <div className={`relative z-10 flex flex-col items-center gap-2 group portfolio-step-indicator ${currentStep >= 6 ? 'active' : ''}`}>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ${currentStep >= 6 ? 'bg-cyan-500 text-white shadow-[0_0_15px_rgba(6,182,212,0.4)] scale-110' : 'bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 text-slate-400'}`}>6</div>
+                  <span className={`text-[11px] font-bold mt-1 transition-colors uppercase tracking-wider ${currentStep >= 6 ? 'text-cyan-500' : 'text-slate-400 hidden sm:block'}`}>Selesai</span>
                 </div>
               </div>
             </div>
               {/* Profile & Subdomain */}
-              <div id="portfolio-step-1" className="portfolio-step block rounded-[24px] p-6 md:p-8 border border-slate-200 dark:border-[#2A3143] bg-transparent">
+              {currentStep === 1 && (
+              <div className="portfolio-step rounded-[24px] p-6 md:p-8 border border-slate-200 dark:border-[#2A3143] bg-transparent">
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-5 flex items-center gap-2">
                   <span className="w-6 h-6 rounded-md bg-cyan-100 dark:bg-cyan-900/50 flex items-center justify-center text-cyan-600 dark:text-cyan-400 text-xs">1</span>
                   Atur Tautan & Identitas
@@ -126,18 +136,20 @@ export default function BuildPortfolioView() {
                 <div className="space-y-5">
                   <div className="space-y-1.5">
                     <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Bio Singkat (Slogan)</label>
-                    <textarea rows="2" placeholder="Membangun aplikasi web keren dan mempelajari AI..." className="w-full bg-white dark:bg-[#1A2133] border border-slate-300 dark:border-[#2A3143] rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-slate-200 placeholder-slate-600 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-all resize-none"></textarea>
+                    <textarea rows={2} placeholder="Membangun aplikasi web keren dan mempelajari AI..." className="w-full bg-white dark:bg-[#1A2133] border border-slate-300 dark:border-[#2A3143] rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-slate-200 placeholder-slate-600 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-all resize-none"></textarea>
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Tentang Saya (Lengkap)</label>
-                    <textarea rows="4" placeholder="Ceritakan lebih detail tentang perjalanan karir Anda, passion, dan apa yang sedang Anda cari..." className="w-full bg-white dark:bg-[#1A2133] border border-slate-300 dark:border-[#2A3143] rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-slate-200 placeholder-slate-600 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-all resize-none"></textarea>
+                    <textarea rows={4} placeholder="Ceritakan lebih detail tentang perjalanan karir Anda, passion, dan apa yang sedang Anda cari..." className="w-full bg-white dark:bg-[#1A2133] border border-slate-300 dark:border-[#2A3143] rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-slate-200 placeholder-slate-600 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-all resize-none"></textarea>
                   </div>
                 </div>
-                <div className="flex justify-end mt-8 pt-6 border-t border-slate-200 dark:border-slate-800/50"><button type="button" onClick={() => { (window as any).goToPortfolioStep(2) }} className="bg-cyan-600 hover:bg-cyan-500 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-cyan-500/25 flex items-center gap-2 active:scale-95">Selanjutnya <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg></button></div>
+                <div className="flex justify-end mt-8 pt-6 border-t border-slate-200 dark:border-slate-800/50"><button type="button" onClick={nextStep} className="bg-cyan-600 hover:bg-cyan-500 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-cyan-500/25 flex items-center gap-2 active:scale-95">Selanjutnya <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg></button></div>
               </div>
+              )}
 
               {/* Links & Digital Real Estate */}
-              <div id="portfolio-step-2" className="portfolio-step hidden rounded-[24px] p-6 md:p-8 border border-slate-200 dark:border-[#2A3143] bg-transparent mt-6">
+              {currentStep === 2 && (
+              <div className="portfolio-step rounded-[24px] p-6 md:p-8 border border-slate-200 dark:border-[#2A3143] bg-transparent mt-6">
                 <div className="flex items-center justify-between mb-5">
                   <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
                     <span className="w-6 h-6 rounded-md bg-cyan-100 dark:bg-cyan-900/50 flex items-center justify-center text-cyan-600 dark:text-cyan-400 text-xs">2</span>
@@ -163,11 +175,13 @@ export default function BuildPortfolioView() {
                       <input type="url" placeholder="URL (https://linkedin.com/...)" className="flex-1 bg-white dark:bg-[#1A2133] border border-slate-300 dark:border-[#2A3143] rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 placeholder-slate-600 outline-none" />
                    </div>
                 </div>
-                <div className="flex justify-between mt-8 pt-6 border-t border-slate-200 dark:border-slate-800/50"><button type="button" onClick={() => { (window as any).goToPortfolioStep(1) }} className="bg-white dark:bg-[#1A2133] hover:bg-slate-200 dark:hover:bg-[#1A2133] text-slate-700 dark:text-slate-300 px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2 active:scale-95"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg> Sebelumnya</button><button type="button" onClick={() => { (window as any).goToPortfolioStep(3) }} className="bg-cyan-600 hover:bg-cyan-500 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-cyan-500/25 flex items-center gap-2 active:scale-95">Selanjutnya <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg></button></div>
+                <div className="flex justify-between mt-8 pt-6 border-t border-slate-200 dark:border-slate-800/50"><button type="button" onClick={prevStep} className="bg-white dark:bg-[#1A2133] hover:bg-slate-200 dark:hover:bg-[#1A2133] text-slate-700 dark:text-slate-300 px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2 active:scale-95"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg> Sebelumnya</button><button type="button" onClick={nextStep} className="bg-cyan-600 hover:bg-cyan-500 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-cyan-500/25 flex items-center gap-2 active:scale-95">Selanjutnya <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg></button></div>
               </div>
+              )}
 
               {/* Proyek Unggulan */}
-              <div id="portfolio-step-3" className="portfolio-step hidden rounded-[24px] p-6 md:p-8 border border-slate-200 dark:border-[#2A3143] bg-transparent mt-6">
+              {currentStep === 3 && (
+              <div className="portfolio-step rounded-[24px] p-6 md:p-8 border border-slate-200 dark:border-[#2A3143] bg-transparent mt-6">
                 <div className="flex items-center justify-between mb-5">
                   <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
                     <span className="w-6 h-6 rounded-md bg-cyan-100 dark:bg-cyan-900/50 flex items-center justify-center text-cyan-600 dark:text-cyan-400 text-xs">3</span>
@@ -192,15 +206,17 @@ export default function BuildPortfolioView() {
                                <input type="url" placeholder="Tautan Proyek (opsional)" className="w-full bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700/80 rounded-lg px-3 py-2 text-sm text-slate-800 dark:text-slate-200 outline-none" />
                             </div>
                          </div>
-                         <textarea rows="2" placeholder="Deskripsi singkat proyek Anda..." className="w-full bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700/80 rounded-lg px-3 py-2 text-sm text-slate-800 dark:text-slate-200 outline-none resize-none"></textarea>
+                         <textarea rows={2} placeholder="Deskripsi singkat proyek Anda..." className="w-full bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700/80 rounded-lg px-3 py-2 text-sm text-slate-800 dark:text-slate-200 outline-none resize-none"></textarea>
                        </div>
                     </div>
                  </div>
-                 <div className="flex justify-between mt-8 pt-6 border-t border-slate-200 dark:border-slate-800/50"><button type="button" onClick={() => { (window as any).goToPortfolioStep(2) }} className="bg-white dark:bg-[#1A2133] hover:bg-slate-200 dark:hover:bg-[#1A2133] text-slate-700 dark:text-slate-300 px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2 active:scale-95"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg> Sebelumnya</button><button type="button" onClick={() => { (window as any).goToPortfolioStep(4) }} className="bg-cyan-600 hover:bg-cyan-500 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-cyan-500/25 flex items-center gap-2 active:scale-95">Selanjutnya <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg></button></div>
+                 <div className="flex justify-between mt-8 pt-6 border-t border-slate-200 dark:border-slate-800/50"><button type="button" onClick={prevStep} className="bg-white dark:bg-[#1A2133] hover:bg-slate-200 dark:hover:bg-[#1A2133] text-slate-700 dark:text-slate-300 px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2 active:scale-95"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg> Sebelumnya</button><button type="button" onClick={nextStep} className="bg-cyan-600 hover:bg-cyan-500 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-cyan-500/25 flex items-center gap-2 active:scale-95">Selanjutnya <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg></button></div>
               </div>
+              )}
 
               {/* Pengalaman & Edukasi Terperinci */}
-              <div id="portfolio-step-4" className="portfolio-step hidden rounded-[24px] p-6 md:p-8 border border-slate-200 dark:border-[#2A3143] bg-transparent mt-6">
+              {currentStep === 4 && (
+              <div className="portfolio-step rounded-[24px] p-6 md:p-8 border border-slate-200 dark:border-[#2A3143] bg-transparent mt-6">
                 <div className="flex items-center justify-between mb-5">
                   <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
                     <span className="w-6 h-6 rounded-md bg-cyan-100 dark:bg-cyan-900/50 flex items-center justify-center text-cyan-600 dark:text-cyan-400 text-xs">4</span>
@@ -220,7 +236,7 @@ export default function BuildPortfolioView() {
                          <input type="text" placeholder="Perusahaan / Institusi" className="w-full bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700/80 rounded-lg px-3 py-2 text-sm text-slate-800 dark:text-slate-200 outline-none" />
                          <input type="text" placeholder="Tahun (misal: 2022 - Sekarang)" className="w-full bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700/80 rounded-lg px-3 py-2 text-sm text-slate-800 dark:text-slate-200 outline-none sm:col-span-2" />
                       </div>
-                      <textarea rows="2" placeholder="Deskripsi peran atau pencapaian..." className="w-full bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700/80 rounded-lg px-3 py-2 text-sm text-slate-800 dark:text-slate-200 outline-none resize-none"></textarea>
+                      <textarea rows={2} placeholder="Deskripsi peran atau pencapaian..." className="w-full bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700/80 rounded-lg px-3 py-2 text-sm text-slate-800 dark:text-slate-200 outline-none resize-none"></textarea>
                    </div>
                 </div>
 
@@ -228,11 +244,13 @@ export default function BuildPortfolioView() {
                   <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Keterampilan Utama (Pisahkan dengan koma)</label>
                   <input type="text" placeholder="React, Node.js, Problem Solving, Public Speaking" className="w-full bg-white dark:bg-[#1A2133] border border-slate-300 dark:border-[#2A3143] rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-slate-200 placeholder-slate-600 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-all" />
                 </div>
-                <div className="flex justify-between mt-8 pt-6 border-t border-slate-200 dark:border-slate-800/50"><button type="button" onClick={() => { (window as any).goToPortfolioStep(3) }} className="bg-white dark:bg-[#1A2133] hover:bg-slate-200 dark:hover:bg-[#1A2133] text-slate-700 dark:text-slate-300 px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2 active:scale-95"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg> Sebelumnya</button><button type="button" onClick={() => { (window as any).goToPortfolioStep(5) }} className="bg-cyan-600 hover:bg-cyan-500 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-cyan-500/25 flex items-center gap-2 active:scale-95">Selanjutnya <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg></button></div>
+                <div className="flex justify-between mt-8 pt-6 border-t border-slate-200 dark:border-slate-800/50"><button type="button" onClick={prevStep} className="bg-white dark:bg-[#1A2133] hover:bg-slate-200 dark:hover:bg-[#1A2133] text-slate-700 dark:text-slate-300 px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2 active:scale-95"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg> Sebelumnya</button><button type="button" onClick={nextStep} className="bg-cyan-600 hover:bg-cyan-500 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-cyan-500/25 flex items-center gap-2 active:scale-95">Selanjutnya <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg></button></div>
               </div>
+              )}
               
               {/* Gaya & Visual */}
-              <div id="portfolio-step-5" className="portfolio-step hidden rounded-[24px] p-6 md:p-8 border border-slate-200 dark:border-[#2A3143] bg-transparent mt-6">
+              {currentStep === 5 && (
+              <div className="portfolio-step rounded-[24px] p-6 md:p-8 border border-slate-200 dark:border-[#2A3143] bg-transparent mt-6">
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-5 flex items-center gap-2">
                   <span className="w-6 h-6 rounded-md bg-cyan-100 dark:bg-cyan-900/50 flex items-center justify-center text-cyan-600 dark:text-cyan-400 text-xs">5</span>
                   Gaya & Visual Custom
@@ -262,11 +280,13 @@ export default function BuildPortfolioView() {
                     </div>
                   </div>
                 </div>
-                <div className="flex justify-between mt-8 pt-6 border-t border-slate-200 dark:border-slate-800/50"><button type="button" onClick={() => { (window as any).goToPortfolioStep(4) }} className="bg-white dark:bg-[#1A2133] hover:bg-slate-200 dark:hover:bg-[#1A2133] text-slate-700 dark:text-slate-300 px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2 active:scale-95"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg> Sebelumnya</button><button type="button" onClick={() => { (window as any).goToPortfolioStep(6) }} className="bg-cyan-600 hover:bg-cyan-500 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-cyan-500/25 flex items-center gap-2 active:scale-95">Selanjutnya <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg></button></div>
+                <div className="flex justify-between mt-8 pt-6 border-t border-slate-200 dark:border-slate-800/50"><button type="button" onClick={prevStep} className="bg-white dark:bg-[#1A2133] hover:bg-slate-200 dark:hover:bg-[#1A2133] text-slate-700 dark:text-slate-300 px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2 active:scale-95"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg> Sebelumnya</button><button type="button" onClick={nextStep} className="bg-cyan-600 hover:bg-cyan-500 text-white px-8 py-3 rounded-xl font-bold transition-all shadow-lg shadow-cyan-500/25 flex items-center gap-2 active:scale-95">Selanjutnya <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg></button></div>
               </div>
+              )}
 
           {/* Right Col: Template Select & Generate */}
-          <div id="portfolio-step-6" className="portfolio-step hidden w-full">
+          {currentStep === 6 && (
+          <div className="portfolio-step w-full">
             <div className="grid grid-cols-1 gap-6">
 
               {/* Pilih Layout Column */}
@@ -349,13 +369,14 @@ export default function BuildPortfolioView() {
               </div>
 
             </div>
+            </div>
             
             {/* Aksi Button */}
             <div className="rounded-[24px] p-6 border border-slate-200 dark:border-[#2A3143] bg-transparent mt-6">
               <div className="flex flex-col gap-4">
               <div className="flex items-center gap-4">
-                <button type="button" onClick={() => { (window as any).goToPortfolioStep(5) }} className="shrink-0 bg-white dark:bg-[#1A2133] hover:bg-slate-200 dark:hover:bg-[#1A2133] text-slate-700 dark:text-slate-300 px-6 py-4 rounded-xl font-bold transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer" title="Kembali ke Gaya & Visual Custom"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg></button>
-              <button id="btn-generate-portfolio" className="flex-1 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-4 rounded-2xl transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] flex items-center justify-center gap-2 group">
+                <button type="button" onClick={prevStep} className="shrink-0 bg-white dark:bg-[#1A2133] hover:bg-slate-200 dark:hover:bg-[#1A2133] text-slate-700 dark:text-slate-300 px-6 py-4 rounded-xl font-bold transition-all flex items-center justify-center gap-2 active:scale-95 cursor-pointer" title="Kembali ke Gaya & Visual Custom"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg></button>
+              <button onClick={handleGeneratePortfolio} className="flex-1 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-4 rounded-2xl transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] flex items-center justify-center gap-2 group">
                 <svg className="w-5 h-5 group-hover:-translate-y-1 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
                 Publikasikan Portofolio AI
               </button>
@@ -367,12 +388,14 @@ export default function BuildPortfolioView() {
             </div>
             
             </div>
-          </div>
+            )}
 
-            </div> {/* END CONTAINER: MANUAL FORMS (PORTFOLIO) */}
+            </div>
+            )} {/* END CONTAINER: MANUAL FORMS (PORTFOLIO) */}
 
             {/* CONTAINER: AI MAGIC STORY (PORTFOLIO) */}
-            <div id="container-portfolio-ai" className="hidden animate-[fadeIn_0.3s_ease_forwards]">
+            {isAiMode && (
+            <div className="animate-[fadeIn_0.3s_ease_forwards]">
               <div className="rounded-[24px] p-6 md:p-8 border border-slate-200 dark:border-[#2A3143] bg-transparent border border-cyan-500/30 relative overflow-hidden">
                 {/* Decorative Glow */}
                 <div className="absolute -top-10 -right-10 w-32 h-32 bg-cyan-500/20 blur-[40px] rounded-full pointer-events-none"></div>
@@ -391,7 +414,7 @@ export default function BuildPortfolioView() {
                 
                 {aiStep === 1 && (
                 <div className="animate-[fadeIn_0.3s_ease_forwards]">
-                  <textarea rows="14" placeholder="Misal: Saya ingin username @johndoe. Saya seorang fullstack dev. Sertakan tombol ke github saya: github.com/johndoe. Saya ingin menyoroti dua side-project: 1) 'Taskify' react todo app di taskify.app dan 2) 'API Fetcher' tool cli nodejs. Buat bio saya terdengar seru dan ramah." className="w-full bg-white/80 dark:bg-[#0B1221]/80 border border-cyan-500/50 rounded-2xl p-5 text-sm text-slate-800 dark:text-slate-200 placeholder-slate-500 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 outline-none resize-none transition-all relative z-10 shadow-inner"></textarea>
+                  <textarea rows={14} placeholder="Misal: Saya ingin username @johndoe. Saya seorang fullstack dev. Sertakan tombol ke github saya: github.com/johndoe. Saya ingin menyoroti dua side-project: 1) 'Taskify' react todo app di taskify.app dan 2) 'API Fetcher' tool cli nodejs. Buat bio saya terdengar seru dan ramah." className="w-full bg-white/80 dark:bg-[#0B1221]/80 border border-cyan-500/50 rounded-2xl p-5 text-sm text-slate-800 dark:text-slate-200 placeholder-slate-500 focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 outline-none resize-none transition-all relative z-10 shadow-inner"></textarea>
                   
                   <div className="mt-5 flex flex-wrap justify-between items-center gap-3 relative z-10">
                      <div className="flex flex-wrap gap-2 items-center">
@@ -415,7 +438,7 @@ export default function BuildPortfolioView() {
                     </div>
                     <LayoutSelection theme="cyan" stepNumber={5} />
                     <div className="flex items-center gap-3 justify-end mt-2">
-                       <button id="btn-generate-portfolio-ai" className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white px-6 py-3 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] active:scale-95 group">
+                       <button onClick={handleGeneratePortfolio} className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white px-6 py-3 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] active:scale-95 group">
                           Buat AI Portfolio
                           <svg className="w-5 h-5 group-hover:-translate-y-1 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
                        </button>
@@ -423,7 +446,8 @@ export default function BuildPortfolioView() {
                   </div>
                 )}
               </div>
-            </div> {/* END CONTAINER: AI MAGIC STORY (PORTFOLIO) */}
+            </div>
+            )} {/* END CONTAINER: AI MAGIC STORY (PORTFOLIO) */}
 
           </div> {/* END Left Col */}
           
@@ -468,6 +492,5 @@ export default function BuildPortfolioView() {
         </div>
 
       </div>
-    </>
   );
 }

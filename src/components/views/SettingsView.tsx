@@ -1,14 +1,14 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export default function SettingsView() {
   return (
-    <>
-      <div id="view-settings" className="hidden animate-[fadeIn_0.5s_ease_forwards]">
-        <div className="max-w-2xl mx-auto mt-10">
-          <button id="btn-back-from-settings" className="mb-6 flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-white/5 dark:hover:text-white px-3 py-2 rounded-xl transition-colors font-semibold">
+    <div className="animate-[fadeIn_0.5s_ease_forwards]">
+      <div className="max-w-2xl mx-auto mt-10">
+          <Link to="/profile" className="mb-6 flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-white/5 dark:hover:text-white px-3 py-2 rounded-xl transition-colors font-semibold w-fit">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Kembali
-          </button>
+          </Link>
           
           <div className="bg-white dark:bg-[#0B1221] rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none overflow-hidden">
              <div className="p-8 border-b border-slate-200 dark:border-slate-800">
@@ -70,7 +70,6 @@ export default function SettingsView() {
                     </div>
                 </div>
              </div>
-          </div>
         </div>
       </div>
       
@@ -80,6 +79,6 @@ export default function SettingsView() {
         .toggle-checkbox:checked + .toggle-label { background-color: #3b82f6; }
         .toggle-checkbox { transition: all 0.3s; }
       `}} />
-    </>
+    </div>
   );
 }
